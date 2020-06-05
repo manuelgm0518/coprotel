@@ -1,13 +1,54 @@
 <template>
     <div id="LogIn">
-        <h2>Iniciar sesión</h2>
-        <b-form>
-            <label for="email">Correo electronico</label>
-            <b-input id="email" type="text" placeholder="Tu correo" v-model="user.email"></b-input>
-            <label for="password">Contraseña</label>
-            <b-input id="password" type="password" placeholder="Tu contraseña" v-model="user.password"></b-input>
-            <b-button id="btnLogIn" type="button" variant="danger" @click="logIn">Inicias sesión</b-button>
-        </b-form>
+
+         <b-button v-b-modal.modal-prevent-closing>Sign In</b-button>
+
+        <b-modal
+            id="modal-prevent-closing"
+            ref="modal"
+            title="Sing In"
+            @show="resetModal"
+            @hidden="resetModal"
+            @ok="handleOk"
+        >
+        
+        <form ref="form" @submit.stop.prevent="handleSubmit">
+
+            <b-form-group
+                :state="emailState"
+                label="Email"
+                label-for="email-input"
+                invalid-feedback="Email is required"
+            >
+            <b-form-input
+                id="email-input"
+                v-model="user.email"
+                :state="emailState"
+                required
+            ></b-form-input>
+            </b-form-group>
+
+        </form>
+
+        <form ref="form2" @submit.stop.prevent="handleSubmit">
+
+            <b-form-group
+                :state="passwordState"
+                label="Password"
+                label-for="password-input"
+                invalid-feedback="Password is required"
+            >
+            <b-form-input
+                id="password-input"
+                v-model="user.password"
+                type="password"
+                :state="passwordState"
+                required
+            ></b-form-input>
+            </b-form-group>
+
+        </form>
+        </b-modal>
     </div>
 </template>
 
@@ -20,19 +61,54 @@ export default {
             user:{
                 email:'',
                 password:''
-            }
+            },
+            emailState: null,
+            passwordState: null
         }
     },
     methods:{
-        logIn(){
-            if(this.user.email == '' || this.user.password == ''){
-                alert('Debe llenar todos los campos'); //Falta ponerlo más bonito
-            } else {
-                axios.post(this.$store.state.serverPath + '/api/user/logIn', this.user).then(res => {
+        checkFormValidity() {
+            const valid = this.$refs.form.checkValidity()
+            const valid2 = this.$refs.form2.checkValidity()
+            this.emailState = valid
+            this.passwordState = valid2
+            return valid && valid2
+        },
+        resetModal() {
+            this.user.email = ''
+            this.emailState = null
+            this.user.password = ''
+            this.passwordState = null
+        },
+         handleOk(bvModalEvt) {
+            // Prevent modal from closing
+            bvModalEvt.preventDefault()
+            // Trigger submit handler
+            this.handleSubmit()
+        },
+        handleSubmit() {
+
+            var err_info = false
+
+            // Exit when the form isn't valid
+            if (!this.checkFormValidity()) {
+                return
+            }
+            // Hide the modal manually
+
+            axios.post(this.$store.state.serverPath + '/api/user/logIn', this.user).then(res => {
                     if(res.data.error){
                         axios.post(this.$store.state.serverPath + '/api/admin/logIn', this.user).then(res => {
                             if(res.data.error)
-                                alert('Usuario o contraseña incorrecto'); //Falta ponerlo más bonito
+                                err_info = true,
+                                //alert('Usuario o contraseña incorrecto'); //Falta ponerlo más bonito
+                                this.$bvToast.toast('Usuario o contraseña incorrectos', {
+                                    title: `Error`,
+                                    variant: `danger`,
+                                    toaster: `b-toaster-top-center`,
+                                    solid: true
+                                }),
+                                this.resetModal()
                             else {
                                 localStorage.setItem("token", res.data);
                                 this.$router.push('/');
@@ -47,9 +123,12 @@ export default {
                     }
                 }).catch(err => {
                     console.log(err);
-                });
+            });
+            if(err_info)
+                this.$nextTick(() => {
+                    this.$bvModal.hide('modal-prevent-closing')
+                })
             }
-        }
     }
 }
 </script>
