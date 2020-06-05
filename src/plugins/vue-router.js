@@ -15,6 +15,10 @@ export default new VueRouter({
       path: '/LogIn',
       name:'LogIn',
       component: () => import('../views/LogIn.vue')
+    },{
+      path: '/Register',
+      name:'Register',
+      component: () => import('../views/Register.vue')
     }
   ]
 })

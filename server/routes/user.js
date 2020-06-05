@@ -15,6 +15,15 @@ router.get('/', (req, res) => {
     });
 });
 
+router.get('/email/:email', (req, res) => {
+    user.findOne({email:req.params.email}, (err, data) => {
+        if(err)
+            res.status(400).json(err);
+        else
+            res.json(data);
+    });
+})
+
 router.post('/', (req, res) => {
     user.findOne({email:req.body.email}, (err, data) => {
         const userData = req.body;

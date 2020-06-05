@@ -6,7 +6,7 @@
             <b-input id="email" type="text" placeholder="Tu correo" v-model="user.email"></b-input>
             <label for="password">Contraseña</label>
             <b-input id="password" type="password" placeholder="Tu contraseña" v-model="user.password"></b-input>
-            <b-button id="btnLogIn" type="button" variant="danger" @click="logIn">Inicias sesión</b-button>
+            <b-button id="btnLogIn" type="button" variant="danger" @click="logIn">Iniciar sesión</b-button>
         </b-form>
     </div>
 </template>
