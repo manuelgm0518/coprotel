@@ -17,7 +17,8 @@ var office = new Schema({
     rents:[{
         lessee:{type:mongoose.Schema.Types.ObjectId, ref:user, required:[true, 'No office rents lesse']},
         date:{type:Date, default:Date.now}
-    }]
+    }],
+    keywords:[{type:String, required:[true, 'No office keyword']}]
 });
 
 module.exports = mongoose.model('office', office);
