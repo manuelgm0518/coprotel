@@ -6,7 +6,7 @@
         <b-modal
             id="modal-prevent-closing"
             ref="modal"
-            title="Sing In"
+            title="Sign In"
             @show="resetModal"
             @hidden="resetModal"
             @ok="handleOk"
