@@ -1,0 +1,24 @@
+Oficina
+- Título
+- Ubicacón de la Oficina
+- Dueño
+- Monto de renta
+- Descripción
+- Contacto
+- Metros Cuadrados
+- Cupo de personas
+- Imagenes
+- Datos de contacto (Sólo cuando le da a rentar xd)
+- Usuarios que quieren rentarlo [
+    - Le damos el contacto al usuario.
+]
+
+Usarios
+- Nombre
+- Correo electronico
+- Contraseña
+- Tal vez Teléfono
+- Método de pago //Por ver
+- País
+- Estado
+- Es un admin? (sí, no)
