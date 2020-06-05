@@ -63,7 +63,7 @@ export default {
             if(input.value == '' || this.admin.email.value.indexOf('@') == -1 || this.admin.email.value.indexOf('.') == -1)
                 input.state = false;
             else{
-                axios.get(this.$store.state.serverPath + '/api/admin/email/' + input.value).then(res => {
+                axios.get(this.$store.state.serverPath + '/api/user/email/' + input.value).then(res => {
                     if(res.data == null)
                         input.state = true;
                     else{
