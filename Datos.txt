@@ -22,3 +22,6 @@ Usarios
 - País
 - Estado
 - Es un admin? (sí, no)
+
+País
+- Estados
