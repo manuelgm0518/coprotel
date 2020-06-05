@@ -1,26 +1,17 @@
 <template>
-    <div id=Register>
-        <h2>Regístrate</h2>
+    <div id=AdmReg>
+        <h2>Regístrate como Administrador</h2>
         <b-form>
             <label for="name">Nombre</label>
-            <b-input id="name" type="text" placeholder="Tu nombre" v-model="user.name.value" :state="user.name.state" @blur="user.name.verify(user.name)"></b-input>
+            <b-input id="name" type="text" placeholder="Tu nombre" v-model="admin.name.value" :state="admin.name.state" @blur="admin.name.verify(admin.name)"></b-input>
             <label for="lastName">Apellido</label>
-            <b-input id="lastName" type="text" placeholder="Tu apellido" v-model="user.lastName.value" :state="user.lastName.state" @blur="user.lastName.verify(user.lastName)"></b-input>
+            <b-input id="lastName" type="text" placeholder="Tu apellido" v-model="admin.lastName.value" :state="admin.lastName.state" @blur="admin.lastName.verify(admin.lastName)"></b-input>
             <label for="email">Correo Electrónico</label>
-            <b-input id="email" type="text" placeholder="Tu correo electrónico" v-model="user.email.value" :state="user.email.state" @blur="user.email.verify(user.email)"></b-input>
+            <b-input id="email" type="text" placeholder="Tu correo electrónico" v-model="admin.email.value" :state="admin.email.state" @blur="admin.email.verify(admin.email)"></b-input>
             <label for="password">Contraseña</label>
-            <b-input id="password" type="password" placeholder="Tu contraseña" v-model="user.password.value" :state="user.password.state" @blur="user.password.verify(user.password)"></b-input>
+            <b-input id="password" type="password" placeholder="Tu contraseña" v-model="admin.password.value" :state="admin.password.state" @blur="admin.password.verify(admin.password)"></b-input>
             <label for="confirmPassword">Confirmar contraseña</label> 
-            <b-input id="confirmPassword" type="password" placeholder="Confirmar contraseña" v-model="user.confirmPassword.value" :state="user.confirmPassword.state"  @blur="user.confirmPassword.verify(user.confirmPassword)"></b-input>                
-            <label for="phone">Teléfono (opcional)</label>
-            <b-input id="phone" type="text" placeholder="Tu teléfono" v-model="user.phone.value" :state="user.phone.state"></b-input>
-            <label for="location">Selecciona tu país y estado</label>
-            <b-select v-model="user.country.value" :state="user.country.state" @change="loadStates(); user.country.verify(user.country);">
-                <option v-for="(country, i) in countries" v-bind:key="i" :value="country._id">{{country.name}}</option>
-            </b-select> 
-            <b-select v-model="user.location.value" :state="user.location.state" @change="user.location.verify(user.location)">
-                <option v-for="(state, j) in states" v-bind:key="j" :value="state._id">{{state.name}}</option>
-            </b-select>
+            <b-input id="confirmPassword" type="password" placeholder="Confirmar contraseña" v-model="admin.confirmPassword.value" :state="admin.confirmPassword.state"  @blur="admin.confirmPassword.verify(admin.confirmPassword)"></b-input>                
             <b-button type="button" variant="primary" @click="test">Regístrate</b-button>
         </b-form>
     </div>
@@ -32,43 +23,28 @@ import axios from 'axios';
 export default {
     data(){
         return {
-            user:{
+            admin:{
                 name:{value:'', state:null, verify:this.verifyText},
                 lastName:{value:'', state:null, verify:this.verifyText},
                 email:{value:'', state:null, verify:this.verifyEmail},
                 password:{value:'', state:null, verify:this.verifyText},
                 confirmPassword:{value:'', state:null, verify:this.verifyPassword},
-                phone:{value:'', state:null, verify:this.verifyPhone},
-                country:{value:'', state:null, verify:this.verifyText},
-                location:{value:'', state:null, verify:this.verifyText}
-            },
-            countries:[],
-            states:[{name:'Elija un estado', _id:''}]
+            }
         }
-    },
-    created(){
-        axios.get(this.$store.state.serverPath + '/api/country').then(res => {
-            this.countries = res.data;
-            this.countries.unshift({name:"Elija un país", _id:""});
-        }).catch(err => {
-            console.log(err);
-        });
     },
     methods:{
         test(){
             this.changeState();
             if(this.validateInput()){
                 let data = {
-                    name:this.user.name.value,
-                    lastName:this.user.lastName.value,
-                    email:this.user.email.value,
-                    password:this.user.password.value,
-                    phone:this.user.phone.value,
-                    location:this.user.location.value
+                    name:this.admin.name.value,
+                    lastName:this.admin.lastName.value,
+                    email:this.admin.email.value,
+                    password:this.admin.password.value,
                 }
-                axios.post(this.$store.state.serverPath + '/api/user', data).then(reg => {
+                axios.post(this.$store.state.serverPath + '/api/admin', data).then(reg => {
                     /////
-                    alert('Usuario registrado: ' + reg.data.name); //Falta fixear esto xd
+                    alert('Administrador registrado: ' + reg.data.name); //Falta fixear esto xd
                     /////
                 }).catch(err => {
                     console.log(err);
@@ -84,15 +60,15 @@ export default {
                 input.state = true;
         },
         verifyEmail(input){
-            if(input.value == '' || this.user.email.value.indexOf('@') == -1 || this.user.email.value.indexOf('.') == -1)
+            if(input.value == '' || this.admin.email.value.indexOf('@') == -1 || this.admin.email.value.indexOf('.') == -1)
                 input.state = false;
             else{
-                axios.get(this.$store.state.serverPath + '/api/user/email/' + input.value).then(res => {
+                axios.get(this.$store.state.serverPath + '/api/admin/email/' + input.value).then(res => {
                     if(res.data == null)
                         input.state = true;
                     else{
                         input.state = false;
-                        alert('Correo ya registrado'); //Falta ponerlo más bonito
+                        alert('Correo ya registrado'); //Hacerlo bonito pls
                     }
                 }).catch(err => {
                     console.log(err);
@@ -100,42 +76,23 @@ export default {
             }
         },
         verifyPassword(input){
-            if(this.user.password.value !=false && this.user.password.value == input.value){
+            if(this.admin.password.value !=false && this.admin.password.value == input.value){
                 input.state = true;
             } else {
                 input.state = false;
             }                  
         },
-        verifyPhone(input){
-            if(input.value != '')
-                input.state = true;
-        },
-        loadStates(){
-            this.user.location.value = '';
-            if(this.user.country.value == '')
-                this.states = [{name:'Elija un estado', _id:''}];
-            else{
-                axios.get(this.$store.state.serverPath + '/api/state/' + this.user.country.value)
-                .then(res => {
-                    this.states = res.data;
-                    this.states.unshift({name:"Elija un estado", _id:""});
-                }).catch(err => {
-                    console.log(err);
-                });
-            }
-        },
+
         changeState(){
-            for(var input in this.user){
-                this.user[input].verify(this.user[input]);
+            for(var input in this.admin){
+                this.admin[input].verify(this.admin[input]);
             }  
         },
         validateInput(){
             var band = true;
-            for(var input in this.user){
-                if(input != 'phone'){
-                    if(this.user[input].state == false)
-                    band = false;
-                }
+            for(var input in this.admin){
+                if(this.admin[input].state == false)
+                band = false;
             }
             return band;
         }
