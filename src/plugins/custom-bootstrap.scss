@@ -1,5 +1,14 @@
 
-$blue: red;
+$blue: #5982ef;
+$border-radius:               0.5rem !default;
+$border-radius-lg:            0.6rem !default;
+$border-radius-sm:            .4rem !default;
+
+.vertical-middle {
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+}
 
 @import '~bootstrap/scss/bootstrap.scss';
 @import '~bootstrap-vue/src/index.scss';
