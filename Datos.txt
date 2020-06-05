@@ -23,4 +23,13 @@ Usarios
 - Es un admin? (sí, no)
 
 País
-- Estados
+- Nombre
+
+Estado
+- Nombre
+- País
+
+Adminstradores
+- Nombre
+- Correo
+- Contraseña

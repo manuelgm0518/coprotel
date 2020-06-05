@@ -31,6 +31,8 @@ app.use(morgan('tiny'));
 app.use('/api/user', require('./routes/user'));
 app.use('/api/state', require('./routes/state'));
 app.use('/api/country', require('./routes/country'));
+app.use('/api/office', require('./routes/office'));
+app.use('/api/admin', require('./routes/admin'));
 
 
 app.listen(app.get('port'), function () {
