@@ -16,7 +16,7 @@ export default new VueRouter({
       name: 'LogIn',
       component: () => import('../views/LogIn.vue')
     },{
-      path: '/Register',
+      path: '/register',
       name:'Register',
       component: () => import('../views/Register.vue')
     }, {
@@ -35,6 +35,10 @@ export default new VueRouter({
       path: '/profile/:userId?',
       name: 'Profile',
       component: () => import('../views/Profile.vue')
-    },
+    },{
+      path: '/addoffice',
+      name: 'AddOffice',
+      component: () => import('../views/AddOffice.vue')
+    }
   ]
 })
