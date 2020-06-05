@@ -19,7 +19,11 @@ export default new VueRouter({
       path: '/register',
       name:'Register',
       component: () => import('../views/Register.vue')
-    }, {
+    },{
+      path: '/AdmReg',
+      name:'AdmReg',
+      component: () => import('../views/AdmReg.vue')
+    },{
       path: '/search',
       name: 'Search',
       component: () => import('../views/Search.vue')
