@@ -2,12 +2,22 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const user = require('../models/User');
+const admin = require('../models/Admin');
 const router = express.Router();
 
 process.env.SECRET_KEY = 'Joaquín c la come';
 
 router.get('/', (req, res) => {
     user.find({}, (err, data) => {
+        if(err)
+            res.status(400).json(err);
+        else
+            res.json(data);
+    });
+});
+
+router.get('/admin', (req, res) => {
+    admin.find({}, (err, data) => {
         if(err)
             res.status(400).json(err);
         else
@@ -38,6 +48,29 @@ router.post('/', (req, res) => {
     });
 });
 
+router.post('/admin', (req, res) => {
+    admin.findOne({email:req.body.email}, (err, data) => {
+        const adminData = req.body;
+        if(err)
+            res.status(400).json(err);
+        else
+            if(!data){
+                bcrypt.hash(req.body.password, 10, (err, hash) => {
+                    adminData.password = hash;
+                    admin.create(adminData, (err, doc) => {
+                        if (err) {
+                            res.status(400).json(err);
+                            return;
+                        }
+                        res.json(doc);
+                    });
+                });
+            } else {
+                res.json({error:'Admin already exists'});
+            }
+    });
+});
+
 router.post('/logIn', (req, res) => {
     user.findOne({
         email: req.body.email
@@ -45,7 +78,8 @@ router.post('/logIn', (req, res) => {
         if (data) {
             if (bcrypt.compareSync(req.body.password, data.password)) {
                 const payload = {
-                    _id: user._id
+                    _id: data._id,
+                    admin:false
                 };
                 let token = jwt.sign(payload, process.env.SECRET_KEY);
                 res.send(token);
@@ -53,10 +87,54 @@ router.post('/logIn', (req, res) => {
                 res.json({error:'Incorrect password'});
             }
         } else {
-            res.json({error:'Incorrect password'});
+            admin.findOne({
+                email: req.body.email
+            }).then(data => {
+                if (data) {
+                    if (bcrypt.compareSync(req.body.password, data.password)) {
+                        const payload = {
+                            _id: data._id,
+                            admin:true
+                        };
+                        let token = jwt.sign(payload, process.env.SECRET_KEY);
+                        res.send(token);
+                    } else {
+                        res.json({error:'Incorrect password'});
+                    }
+                } else {
+                    res.json({error:'Incorrect password'});
+                }
+            }).catch(err => {
+                res.json({error:'Incorrect password', log:err});
+            });
         }
     }).catch(err => {
-        res.json({error:'Incorrect password', log:err});
+            res.json({error:'Incorrect password', log:err});
+    });
+});
+
+router.get('/logIn/verify/:token', (req, res) => {
+    let token = req.params.token;
+    jwt.verify(token, process.env.SECRET_KEY, (err, decode) => {
+        if(err)
+            res.json({unauthorized:true});
+        else{
+            if(decode.admin){
+                admin.findOne({_id:decode._id}, (err, data) => {
+                    if(err)
+                        res.status(400).json(err);
+                    else
+                        res.json(data);
+                });
+            } else {
+                user.findOne({_id:decode._id}, (err, data) => {
+                    if(err)
+                        res.status(400).json(err);
+                    else
+                        res.json(data);
+                });
+            }
+        }
     });
 });
 

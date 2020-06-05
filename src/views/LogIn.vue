@@ -30,16 +30,7 @@ export default {
             } else {
                 axios.post(this.$store.state.serverPath + '/api/user/logIn', this.user).then(res => {
                     if(res.data.error){
-                        axios.post(this.$store.state.serverPath + '/api/admin/logIn', this.user).then(res => {
-                            if(res.data.error)
-                                alert('Usuario o contraseña incorrecto'); //Falta ponerlo más bonito
-                            else {
-                                localStorage.setItem("token", res.data);
-                                this.$router.push('/');
-                            }
-                        }).catch(err => {
-                            console.log(err);
-                        });
+                        alert('Usuario o contraseña incorrecto'); //Falta ponerlo más bonito     
                     }
                     else {
                         localStorage.setItem("token", res.data);
