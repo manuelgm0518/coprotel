@@ -5,4 +5,12 @@ import BootstrapVue from 'bootstrap-vue'
 //import 'bootstrap-vue/dist/bootstrap-vue.css'
 import '../plugins/custom-bootstrap.scss'
 
-Vue.use(BootstrapVue)
+Vue.use(BootstrapVue, {
+  "BTooltip": {
+    "boundary": "scrollParent",
+    "boundaryPadding": 5,
+    "customClass": null,
+    "delay": 600,
+    "variant": "secondary"
+  }
+})

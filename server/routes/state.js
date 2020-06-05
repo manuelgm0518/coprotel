@@ -17,7 +17,16 @@ router.post('/', (req, res) => {
             res.status(400).json(err);
         else
             res.json(data);
-    })
-})
+    });
+});
+
+router.get('/:country', (req, res) => {
+    state.find({country:req.params.country}, (err, data) => {
+        if(err)
+            res.status(400).json(err);
+        else
+            res.json(data);
+    });
+});
 
 module.exports = router;

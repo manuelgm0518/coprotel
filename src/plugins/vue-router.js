@@ -11,10 +11,30 @@ export default new VueRouter({
       path: '/',
       name: 'Home',
       component: () => import('../views/Home.vue')
-    },{
-      path: '/LogIn',
-      name:'LogIn',
+    }, {
+      path: '/login',
+      name: 'LogIn',
       component: () => import('../views/LogIn.vue')
-    }
+    },{
+      path: '/Register',
+      name:'Register',
+      component: () => import('../views/Register.vue')
+    }, {
+      path: '/search',
+      name: 'Search',
+      component: () => import('../views/Search.vue')
+    },{
+      path: '/favorites',
+      name: 'Favorites',
+      component: () => import('../views/Favorites.vue')
+    },{
+      path: '/rents/:userId?',
+      name: 'Rents',
+      component: () => import('../views/Rents.vue')
+    },{
+      path: '/profile/:userId?',
+      name: 'Profile',
+      component: () => import('../views/Profile.vue')
+    },
   ]
 })
