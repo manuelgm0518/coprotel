@@ -3,7 +3,7 @@
     <NavigationBar/>
     <div class="vertical-middle text-center">
       <h1>
-        Joaqín c la come desde el inicio
+        Joaqín c la come desde los Favoritos
       </h1>
       <h3 class="d-block d-lg-none">en responsive xd</h3>
     </div>
@@ -13,9 +13,13 @@
 <script>
 import NavigationBar from '../components/NavigationBar'
 export default {
-  name: 'Home',
+  name: 'Favorites',
   components: {
     NavigationBar
   }
 }
 </script>
+
+<style>
+
+</style>
