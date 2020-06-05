@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 var user = new Schema({
     name:{type:String, require:[true, 'No user name']},
+    lastName:{type:String, required:[true, 'No user last name']},
     email:{type:String, require:[true, 'No email']},
     password:{type:String, require:[true, 'No password']},
     phone:{type:String}, //+52 1 449 125 0879
