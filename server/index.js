@@ -5,7 +5,7 @@ const app = express();
 
 //Settings
 app.set('port', process.env.PORT || 3000);
-mongoose.connect('mongodb://127.0.0.1/coprotel');
+mongoose.connect('mongodb+srv://adminxd:adminxd@coprotel-skxxg.mongodb.net/coprotel?retryWrites=true&w=majority');
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error: '));
 db.once('open', () => {
