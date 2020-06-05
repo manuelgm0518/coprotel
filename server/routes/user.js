@@ -30,9 +30,43 @@ router.get('/email/:email', (req, res) => {
         if(err)
             res.status(400).json(err);
         else
-            res.json(data);
+            if(data == null){
+                admin.findOne({email:req.params.email}, (err, data) => {
+                    if(err)
+                        res.status(200).json(err);
+                    else
+                        res.json(data);
+                });
+            } else {
+                res.json(data);
+            }
     });
-})
+});
+
+router.get('/logIn/verify/:token', (req, res) => {
+    let token = req.params.token;
+    jwt.verify(token, process.env.SECRET_KEY, (err, decode) => {
+        if(err)
+            res.json({unauthorized:true});
+        else{
+            if(decode.admin){
+                admin.findOne({_id:decode._id}, (err, data) => {
+                    if(err)
+                        res.status(400).json(err);
+                    else
+                        res.json(data);
+                });
+            } else {
+                user.findOne({_id:decode._id}, (err, data) => {
+                    if(err)
+                        res.status(400).json(err);
+                    else
+                        res.json(data);
+                });
+            }
+        }
+    });
+});
 
 router.post('/', (req, res) => {
     user.findOne({email:req.body.email}, (err, data) => {
@@ -119,31 +153,6 @@ router.post('/logIn', (req, res) => {
         }
     }).catch(err => {
             res.json({error:'Incorrect password', log:err});
-    });
-});
-
-router.get('/logIn/verify/:token', (req, res) => {
-    let token = req.params.token;
-    jwt.verify(token, process.env.SECRET_KEY, (err, decode) => {
-        if(err)
-            res.json({unauthorized:true});
-        else{
-            if(decode.admin){
-                admin.findOne({_id:decode._id}, (err, data) => {
-                    if(err)
-                        res.status(400).json(err);
-                    else
-                        res.json(data);
-                });
-            } else {
-                user.findOne({_id:decode._id}, (err, data) => {
-                    if(err)
-                        res.status(400).json(err);
-                    else
-                        res.json(data);
-                });
-            }
-        }
     });
 });
 

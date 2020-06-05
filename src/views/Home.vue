@@ -1,6 +1,5 @@
 <template>
   <b-container fluid class="bg-light vh-100" style="padding-top:4rem">
-    <NavigationBar/>
     <div class="vertical-middle text-center">
       <h1>
         Joaqín c la come desde el inicio

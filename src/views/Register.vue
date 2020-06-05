@@ -67,9 +67,16 @@ export default {
                     location:this.user.location.value
                 }
                 axios.post(this.$store.state.serverPath + '/api/user', data).then(reg => {
-                    /////
-                    alert('Usuario registrado: ' + reg.data.name); //Falta fixear esto xd
-                    /////
+                    axios.post(this.$store.state.serverPath + '/api/user/logIn', {email:reg.data.email, password:this.user.password.value}).then(res => {
+                        if(res.data.error){
+                            console.log('Usuario o contraseña incorrecto');
+                        } else {
+                            localStorage.setItem('token', res.data);
+                            this.$router.push('/');
+                        }
+                    }).catch(err => {
+                        console.log(err);
+                    });
                 }).catch(err => {
                     console.log(err);
                 });
