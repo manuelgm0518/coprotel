@@ -4,7 +4,6 @@ Oficina
 - Dueño
 - Monto de renta
 - Descripción
-- Contacto
 - Metros Cuadrados
 - Cupo de personas
 - Imagenes
