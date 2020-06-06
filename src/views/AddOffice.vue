@@ -39,6 +39,7 @@
             ></b-file>
             <b-button type="button" variant="warning" @click="add">Agregar</b-button>
         </b-form>
+        <input type="file" ref="file"/>
     </div>
 </template>
 
@@ -172,12 +173,21 @@ export default {
             this.office.images.value.push(null);
         },
         add(){
-            this.changeStates();
+            var ffile = this.$refs.file.files[0];
+            let formData = new FormData();
+            formData.append('file', ffile);
+            axios.post(this.$store.state.serverPath + '/api/office/image', formData, { headers: {'Content-Type': 'multipart/form-data'}})
+            .then(res => {
+                console.log(res);
+            }).catch(err => {
+                console.log(err);
+            });
+            /*this.changeStates();
             if(this.validateInputs()){
                 
             }
             else
-                alert('Joaquín c la come porque no llenaste todos los campos');
+                alert('Joaquín c la come porque no llenaste todos los campos');*/
         }
     }
 }
