@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const busboy = require('connect-busboy');
 const app = express();
 
 //Settings
@@ -26,6 +27,7 @@ function logger(req, res, next){
 app.use(express.json());
 app.use(logger);
 app.use(morgan('tiny'));
+app.use(busboy());
 
 //Routes
 app.use('/api/user', require('./routes/user'));

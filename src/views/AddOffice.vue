@@ -173,9 +173,9 @@ export default {
             this.office.images.value.push(null);
         },
         add(){
-            var ffile = this.$refs.file.files[0];
-            let formData = new FormData();
-            formData.append('file', ffile);
+            var formData = new FormData();
+            var imagefile = this.$refs.file;
+            formData.append("image", imagefile.files[0]);
             axios.post(this.$store.state.serverPath + '/api/office/image', formData, { headers: {'Content-Type': 'multipart/form-data'}})
             .then(res => {
                 console.log(res);
