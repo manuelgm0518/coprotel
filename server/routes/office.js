@@ -21,6 +21,15 @@ router.get('/', (req, res) => {
     });
 });
 
+router.delete('/:id', (req, res) => {
+    office.deleteOne({_id:req.params.id}, (err, data) => {
+        if(err)
+            res.status(400).json(err);
+        else
+            res.json(data);
+    });
+});
+
 router.post('/image/:id', (req, res) => {
     var fstream;
     req.pipe(req.busboy);

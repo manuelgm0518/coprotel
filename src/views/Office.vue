@@ -19,13 +19,16 @@
         <p><i>Fecha de registro: </i>{{office.date}}</p>
         <h3>Precio de renta</h3>
         <p><i>Precio: </i>{{office.rentAmount}}</p>
-        <b-button variant="danger" @click="rent">Rentar</b-button> <!-- Codificación -->
+        <b-button variant="danger" @click="rent">Rentar</b-button>
         <h3>Marcar como favorito</h3>
-        <b-button variant="warning">Favorito</b-button> <!-- Codificación -->
+        <b-button variant="warning" @click="addFavorite" v-if="!favoriteToggle">Añadir a favoritos</b-button>
+        <b-button variant="warning" @click="quitFavorite" v-if="favoriteToggle">Quitar de favoritos</b-button>
 
         <!-- Dueño y admin -->
-        <h3>Eliminar</h3>
-        <b-button variant="dark">Eliminar</b-button>
+        <div id="edit" v-if="edit">
+            <h3>Eliminar</h3>
+            <b-button variant="dark" @click="remove">Eliminar</b-button>
+        </div>
     </div>
 </template>
 
@@ -45,17 +48,21 @@ export default {
                 capacity:'',
                 date:null,
                 keywords:[]
-            }
+            },
+            edit:false,
+            favoriteToggle:false
         }
     },
     mounted(){
-        console.log(this.$store.state.user);
         axios.get(this.$store.state.serverPath + '/api/office/' + this.$route.params.officeId).then(res => {
             if(res.data == null)
                 this.$router.push('/');
             else{
                 this.office = res.data;
                 this.office.date = new Date(this.office.date).toLocaleDateString('es-MX', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                if(this.office.owner == this.$store.state.user._id || this.$store.state.admin)
+                    this.edit = true;
+                this.favoriteToggle = this.searchFavorite();
             }
         }).catch(err => {
             console.log(err);
@@ -66,7 +73,52 @@ export default {
         rent(){
             if(this.$store.state.user == null){
                 alert('Debe iniciar sesión para poder rentar la oficina'); //Falta ponerlo más bonito
+            } else {
+                alert('Aquí debería haber una renta');
             }
+        },
+        searchFavorite(){
+            var band = false;
+            if(this.$store.state.user != null){
+                for(var fav of this.$store.state.user.favorites)
+                    if(fav == this.$route.params.officeId)
+                        band = true;
+            }
+            return band;
+        },
+        addFavorite(){
+            if(this.$store.state.user == null){
+                alert('Debe iniciar sesión para poder añadir a favoritos'); //Falta ponerlo más bonito
+            } else {
+                axios.post(this.$store.state.serverPath + '/api/user/favorite/add', {user:this.$store.state.user._id, office:this.$route.params.officeId}).then(res => {
+                    if(res.status == 200)
+                        this.favoriteToggle = true;
+                }).catch(err => {
+                    console.log(err);
+                });
+            }
+        },
+        quitFavorite(){
+            if(this.$store.state.user == null){
+                alert('Debe iniciar sesión para poder añadir a favoritos'); //Falta ponerlo más bonito
+            } else {
+                axios.post(this.$store.state.serverPath + '/api/user/favorite/quit', {user:this.$store.state.user._id, office:this.$route.params.officeId}).then(res => {
+                    if(res.status == 200)
+                        this.favoriteToggle = false;
+                }).catch(err => {
+                    console.log(err);
+                });
+            }
+        },
+        remove(){
+            axios.delete(this.$store.state.serverPath + '/api/office/' +  this.$route.params.officeId).then(res => {
+                if(res.status == 200){
+                    alert('Falta asignar ruta de regreso');
+                    this.$router.push('/');
+                }
+            }).catch(err => {
+                console.log(err);
+            });
         }
     }
 }

@@ -54,8 +54,17 @@ router.get('/logIn/verify/:token', (req, res) => {
                     if(err)
                         res.status(400).json(err);
                     else
-                        if(data != null)
-                            res.json(data);
+                        if(data != null){
+                            let send = {
+                                email:data.email,
+                                lastName:data.lastName,
+                                name:data.name,
+                                password:data.password,
+                                _id:data._id,
+                                admin:true
+                            }
+                            res.json(send);
+                        }
                         else
                             res.json({unauthorized:true});
                 });
@@ -64,13 +73,44 @@ router.get('/logIn/verify/:token', (req, res) => {
                     if(err)
                         res.status(400).json(err);
                     else
-                        if(data != null)
-                            res.json(data);
+                        if(data != null){
+                            let send = {
+                                email:data.email,
+                                image:data.image,
+                                lastName:data.lastName,
+                                location:data.location,
+                                name:data.name,
+                                password:data.password,
+                                phone:data.phone,
+                                _id:data._id,
+                                favorites:data.favorites,
+                                admin:false
+                            }
+                            res.json(send);
+                        }
                         else
                             res.json({unauthorized:true});
                 });
             }
         }
+    });
+});
+
+router.post('/favorite/add', (req, res) => {
+    user.updateOne({_id:req.body.user}, {$push:{favorites:req.body.office}}, (err, data) => {
+        if(err)
+            res.status(400).json(err);
+        else
+            res.json(data);
+    });
+});
+
+router.post('/favorite/quit', (req, res) => {
+    user.updateOne({_id:req.body.user}, {$pull:{favorites:req.body.office}}, (err, data) => {
+        if(err)
+            res.status(400).json(err);
+        else
+            res.json(data);
     });
 });
 
