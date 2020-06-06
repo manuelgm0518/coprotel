@@ -39,7 +39,6 @@
             ></b-file>
             <b-button type="button" variant="warning" @click="add">Agregar</b-button>
         </b-form>
-        <input type="file" ref="file"/>
     </div>
 </template>
 
@@ -54,7 +53,7 @@ export default {
             office:{
                 name:{value:'', state:null, validate:this.validateText},
                 description:{value:'<p>Escribe una descripción de la oficina</p>', state:null, validate:this.validateTextArea},
-                ownwer:'', //Xd
+                owner:'', //Xd
                 state:{value:'', state:null, validate:this.validateSelect},
                 location:{value:'', state:null, validate:this.validateSelect},
                 rentAmount:{value:'', state:null, validate:this.validateFloat},
@@ -173,21 +172,36 @@ export default {
             this.office.images.value.push(null);
         },
         add(){
-            var formData = new FormData();
-            var imagefile = this.$refs.file;
-            formData.append("image", imagefile.files[0]);
+            /*var formData = new FormData();
+            var imagefile = this.office.images.value[0];
+            formData.append('image', imagefile);
             axios.post(this.$store.state.serverPath + '/api/office/image', formData, { headers: {'Content-Type': 'multipart/form-data'}})
             .then(res => {
                 console.log(res);
             }).catch(err => {
                 console.log(err);
-            });
-            /*this.changeStates();
+            });*/
+            this.changeStates();
             if(this.validateInputs()){
-                
+                while(this.office.keywords.value.indexOf('') != -1)
+                    this.office.keywords.value.splice(this.office.keywords.value.indexOf(''), 1);
+                while(this.office.images.value.indexOf(null) != -1)
+                    this.office.images.value.splice(this.office.images.value.indexOf(null), 1);
+                let send = {
+                    name:this.office.name.value,
+                    description:this.office.description.value,
+                    owner:this.$store.state.user._id,
+                    location:this.office.location.value,
+                    rentAmount:this.office.rentAmount.value,
+                    contact:this.office.contact.value,
+                    area:this.office.area.value,
+                    capacity:this.office.capacity.value,
+                    keywords:this.office.keywords.value
+                };
+                console.log(send);
             }
             else
-                alert('Joaquín c la come porque no llenaste todos los campos');*/
+                alert('Joaquín c la come porque no llenaste todos los campos');
         }
     }
 }
