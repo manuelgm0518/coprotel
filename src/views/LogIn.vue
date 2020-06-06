@@ -3,7 +3,7 @@
         <h2>Iniciar sesión</h2>
         
 
-        <b-button v-b-modal.modal-prevent-closing>Sign In</b-button>  
+         <b-button v-b-modal.modal-prevent-closing>Sign In</b-button>
 
         <b-modal
             id="modal-prevent-closing"
@@ -129,3 +129,4 @@ export default {
 <style scoped>
 
 </style>
+
