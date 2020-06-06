@@ -191,12 +191,13 @@ export default {
                 };
                 axios.post(this.$store.state.serverPath + '/api/office', send).then(async res => {
                     if(res.status == 200){
+                        //////////////////////////////// Aquí estaría chido poner un overlay porque las imagenes tardan en subirse xd
                         for(var img of this.office.images.value){
                             var formData = new FormData();
                             formData.append('image', img);
                             res = await axios.post(this.$store.state.serverPath + '/api/office/image/' + res.data._id, formData, { headers: {'Content-Type': 'multipart/form-data'}})
                         }
-                        alert('Aquí falta asignar la página de regreso');
+                        alert('Aquí falta asignar la página de regreso'); //Falta poner la página de regreso
                         this.$router.push('/');
                     }
                 }).catch(err => {
@@ -204,7 +205,7 @@ export default {
                 });
             }
             else
-                alert('Joaquín c la come porque no llenaste todos los campos');
+                alert('Joaquín c la come porque no llenaste todos los campos'); //Falta ponerlo más bonito
         }
     }
 }
