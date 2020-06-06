@@ -43,6 +43,10 @@ export default new VueRouter({
       path: '/addoffice',
       name: 'AddOffice',
       component: () => import('../views/AddOffice.vue')
+    },{
+      path: '/office/:officeId?',
+      name: 'Office',
+      component: () => import('../views/Office.vue')
     }
   ]
 })
