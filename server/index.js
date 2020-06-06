@@ -30,7 +30,7 @@ app.use(morgan('tiny'));
 //Routes
 app.use('/api/user', require('./routes/user'));
 app.use('/api/state', require('./routes/state'));
-app.use('/api/country', require('./routes/country'));
+app.use('/api/municipality', require('./routes/municipality'));
 app.use('/api/office', require('./routes/office'));
 app.use('/file', require('./routes/file'));
 
