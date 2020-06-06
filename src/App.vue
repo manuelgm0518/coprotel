@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <NavigationBar/>
-    <router-view v-if="$store.state.user != null"/>
+    <router-view v-if="show"/>
   </div>
 </template>
 
@@ -14,6 +14,11 @@ export default {
   components: {
     NavigationBar
   },
+  data(){
+    return {
+      show:false
+    }
+  },
   created(){
     if(localStorage.getItem('token')){
       axios.get(this.$store.state.serverPath + '/api/user/logIn/verify/' + localStorage.getItem('token')).then(res => {
@@ -23,12 +28,14 @@ export default {
         } else {
           this.$store.state.user = res.data;
         }
+        this.show = true;
       }).catch(err => {
         console.log(err);
       });
     } else {
       this.$store.state.user = null;
       localStorage.clear();
+      this.show = true;
     }
   }
 }

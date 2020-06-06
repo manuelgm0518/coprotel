@@ -7,9 +7,9 @@ var user = new Schema({
     lastName:{type:String, required:[true, 'No user last name']},
     email:{type:String, require:[true, 'No email']},
     password:{type:String, require:[true, 'No password']},
-    phone:{type:String}, //+52 1 449 125 0879
+    phone:{type:String},
     location:{type:mongoose.Schema.Types.ObjectId, ref:municipality, required:[true, 'No user location']},
-    image:{type:String, default:'https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/256x256/plain/user.png'},
+    image:{type:String, default:''},
     favorites:[{type:String, require:[true, 'No favorite office']}]
 });
 
