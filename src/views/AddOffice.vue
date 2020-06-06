@@ -6,11 +6,11 @@
             <b-input id="name" type="text" placeholder="Escribe un nombre de oficina" v-model="office.name.value" :state="office.name.state" @blur="office.name.validate(office.name)"></b-input>
             <AreaEditor @update="updateDescription" :content="office.description.value"/>
             <p v-if="!office.description.state && office.description.state != null"><i style="color:red;">Debe escribir una descripción</i></p> <!--Falta ponerlo más bonito-->
-            <b-select id="country">
-                <option value="" disabled>Elije un país</option>
+            <b-select id="state" v-model="office.state.value" @change="changeMunicipalities(); office.state.validate(office.state)" :state="office.state.state">
+                <option v-for="(state, k) in states" v-bind:key="'k' + k" :value="state._id">{{state.name}}</option>
             </b-select>
-            <b-select id="location">
-                <option value="" disabled>Elije un estado</option>
+            <b-select id="location" v-model="office.location.value" @change="office.location.validate(office.location)" :state="office.location.state">
+                <option v-for="(municipality, l) in municipalities" v-bind:key="'l' + l" :value="municipality._id">{{municipality.name}}</option>
             </b-select>
             <b-input id="rentAmount" type="text" placeholder="Escribe un precio de renta" v-model="office.rentAmount.value" :state="office.rentAmount.state" @blur="office.rentAmount.validate(office.rentAmount)"></b-input>
             <AreaEditor @update="updateContact" :content="office.contact.value"/>
@@ -22,7 +22,7 @@
                 type="text"
                 placeholder="Escribe una palabra clave"
                 v-for="(word, i) in office.keywords.value"
-                v-bind:key="i"
+                v-bind:key="'i' + i"
                 v-model="office.keywords.value[i]"
                 @input="addKeyword"
                 :state="office.keywords.state"
@@ -32,18 +32,19 @@
                 class="image"
                 placeholder="Elije una imagen"
                 v-for="(imag, j) in office.images.value"
-                v-bind:key="'i' + j"
+                v-bind:key="'j' + j"
                 v-model="office.images.value[j]"
                 @input="addImage(); office.images.validate(office.images);"
                 :state="office.images.state"
             ></b-file>
-            <b-button type="button" variant="primary" @click="test">Agregar</b-button>
+            <b-button type="button" variant="warning" @click="add">Agregar</b-button>
         </b-form>
     </div>
 </template>
 
 <script>
 import AreaEditor from '../components/AreaEditor.vue';
+import axios from 'axios';
 
 export default {
     name:'AddOffice',
@@ -53,18 +54,29 @@ export default {
                 name:{value:'', state:null, validate:this.validateText},
                 description:{value:'<p>Escribe una descripción de la oficina</p>', state:null, validate:this.validateTextArea},
                 ownwer:'', //Xd
-                location:{value:'', state:null},
+                state:{value:'', state:null, validate:this.validateSelect},
+                location:{value:'', state:null, validate:this.validateSelect},
                 rentAmount:{value:'', state:null, validate:this.validateFloat},
                 contact:{value:'<p>Escribe los datos de contacto</p>', state:null, validate:this.validateTextArea},
                 area:{value:'', state:null, validate:this.validateFloat},
                 capacity:{value:'', state:null, validate:this.validateInt},
                 images:{value:[null], state:null, validate:this.validateMultImages},
                 keywords:{value:[''], state:null, validate:this.validateMultText}
-            }
+            },
+            states:[],
+            municipalities:[{_id:'', name:'Elija un municipio'}]
         }
     },
     components:{
         AreaEditor
+    },
+    mounted(){
+        axios.get(this.$store.state.serverPath + '/api/state').then(res => {
+            this.states = res.data;
+            this.states.unshift({_id:'', name:'Elija un estado'});
+        }).catch(err => {
+            console.log(err);
+        });
     },
     methods:{
         updateDescription(html){
@@ -72,6 +84,19 @@ export default {
         },
         updateContact(html){
             this.office.contact.value = html;
+        },
+        changeMunicipalities(){
+            this.municipalities = [{_id:'', name:'Elija un municipio'}];
+            this.office.location.value = '';
+            this.office.location.state = null;
+            if(this.office.state.value != ''){
+                axios.get(this.$store.state.serverPath + '/api/municipality/' + this.office.state.value).then(res => {
+                    this.municipalities = res.data;
+                    this.municipalities.unshift({_id:'', name:'Elija un municipio'});
+                }).catch(err => {
+                    console.log(err);
+                })
+            }
         },
         validateText(input){
             if(input.value.length <= 3)
@@ -115,6 +140,12 @@ export default {
                 input.state = true;
             input.value.push(null);
         },
+        validateSelect(input){
+            if(input.value == '')
+                input.state = false;
+            else
+                input.state = true;
+        },
         changeStates(){
             for(var input in this.office){
                 if(this.office[input].validate)
@@ -125,7 +156,7 @@ export default {
             var band = true;
             for(var input in this.office){
                 if(this.office[input].validate)
-                    if(this.office[input].state = false)
+                    if(this.office[input].state == false)
                         band = false;
             }
             return band;
@@ -140,9 +171,13 @@ export default {
                 this.office.images.value.splice(this.office.images.value.indexOf(null), 1);
             this.office.images.value.push(null);
         },
-        test(){
-            console.log(this.office);
+        add(){
             this.changeStates();
+            if(this.validateInputs()){
+                
+            }
+            else
+                alert('Joaquín c la come porque no llenaste todos los campos');
         }
     }
 }
