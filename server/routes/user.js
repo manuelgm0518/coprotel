@@ -1,6 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const fs = require('fs');
 const user = require('../models/User');
 const admin = require('../models/Admin');
 const router = express.Router();
@@ -157,6 +158,26 @@ router.post('/admin', (req, res) => {
             } else {
                 res.json({error:'Admin already exists'});
             }
+    });
+});
+
+router.post('/image/:id', (req, res) => {
+    var fstream;
+    req.pipe(req.busboy);
+    req.busboy.on('file', function (fieldname, file, filename) {
+        console.log("Uploading: " + filename);
+        console.log(filename);
+        user.updateOne({_id:req.params.id}, {$set:{image:filename}}, (err, data) => {
+            if(err)
+                console.log(err);
+            else
+                console.log(data);
+        });
+        fstream = fs.createWriteStream(__dirname + '/files/' + filename);
+        file.pipe(fstream);
+        fstream.on('close', function () {
+            res.status(200).json({});
+        });
     });
 });
 

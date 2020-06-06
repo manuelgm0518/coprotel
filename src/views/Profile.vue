@@ -17,13 +17,16 @@
         <h5>Correo electrónico: {{user.email}}</h5>
         <h5>Estado: {{user.location.state.name}}</h5>
         <h5>Municipio: {{user.location.name}}</h5>
-        <img :src="user.image">
+        <img :src="$store.state.serverPath + '/file/' + user.image">
         <b-button variant="primary" @click="mostrar = !mostrar">Editar imagen</b-button>
         <template v-if="mostrar">
             <b-file
                 class="image"
-                placeholder="Elige una imagen"
+                placeholder="Elige una imagen" 
+                v-model="tempimg"
+                @input="tempimg"
             ></b-file>
+            <b-button variant="primary" @click="mostrar = !mostrar, changePfp()">Editar</b-button>
         </template>
         <br>
       <h2>Mis oficinas</h2>
@@ -55,6 +58,7 @@ export default {
   data(){
     return{
       mostrar:false,
+      tempimg:null,
       user:{
         name:'',
         lastName:'',
@@ -65,36 +69,28 @@ export default {
       offices:[]
     }
   },
-  async created(){
-    if(localStorage.getItem('token')){
-      var err, res = await axios.get(this.$store.state.serverPath + '/api/user/logIn/verify/' + localStorage.getItem('token'))
-      if(err)
-        console.log(err);
-      else{
-        if(res.data.unauthorized){
-          localStorage.clear();
-        } else {
-          this.user = res.data;
-          axios.get(this.$store.state.serverPath + '/api/office/user/' + res.data._id).then(res => {
-            console.log(res.data);
-            this.offices = res.data;
-          }).catch(err => {
-            console.log(err);
-          });
-        }
-      }
-    } else {
-      localStorage.clear();
-    }
+  mounted(){
+    this.user = this.$store.state.user;
+    axios.get(this.$store.state.serverPath + '/api/office/user/' + this.user._id).then(res => {
+      console.log(res.data);
+      this.offices = res.data;
+    }).catch(err => {
+      console.log(err);
+    });
   },
   methods:{
       changePfp(){
-          
+        var formData = new FormData();
+          formData.append('image', this.tempimg);
+          axios.post(this.$store.state.serverPath + '/api/user/image/' + this.user._id, formData, { headers: {'Content-Type': 'multipart/form-data'}})
+          alert('aah'); //Falta poner la página de regreso
+          this.$router.push('/');
       },
       goOffice(office){
         this.$router.push('/office/' + office._id);
       }
   }
+  
 }
 </script>
 
