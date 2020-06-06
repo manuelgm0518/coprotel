@@ -54,14 +54,20 @@ router.get('/logIn/verify/:token', (req, res) => {
                     if(err)
                         res.status(400).json(err);
                     else
-                        res.json(data);
+                        if(data != null)
+                            res.json(data);
+                        else
+                            res.json({unauthorized:true});
                 });
             } else {
                 user.findOne({_id:decode._id}, (err, data) => {
                     if(err)
                         res.status(400).json(err);
                     else
-                        res.json(data);
+                        if(data != null)
+                            res.json(data);
+                        else
+                            res.json({unauthorized:true});
                 });
             }
         }

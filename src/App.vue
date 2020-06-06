@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <NavigationBar/>
-    <router-view/>
+    <router-view v-if="$store.state.user != null"/>
   </div>
 </template>
 
@@ -19,7 +19,7 @@ export default {
       axios.get(this.$store.state.serverPath + '/api/user/logIn/verify/' + localStorage.getItem('token')).then(res => {
         if(res.data.unauthorized){
           localStorage.clear();
-          this.$store.state.user = {}
+          this.$store.state.user = null;
         } else {
           this.$store.state.user = res.data;
         }
@@ -27,7 +27,7 @@ export default {
         console.log(err);
       });
     } else {
-      this.$store.state.user = {}
+      this.$store.state.user = null;
       localStorage.clear();
     }
   }
