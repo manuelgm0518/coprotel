@@ -14,18 +14,15 @@ export default {
   components: {
     NavigationBar
   },
-  created(){
+  async created(){
     if(localStorage.getItem('token')){
-      axios.get(this.$store.state.serverPath + '/api/user/logIn/verify/' + localStorage.getItem('token')).then(res => {
-        if(res.data.unauthorized){
-          localStorage.clear();
-          this.$store.state.user = {}
-        } else {
-          this.$store.state.user = res.data;
-        }
-      }).catch(err => {
-        console.log(err);
-      });
+      var res = await axios.get(this.$store.state.serverPath + '/api/user/logIn/verify/' + localStorage.getItem('token'))
+      if(res.data.unauthorized){
+        localStorage.clear();
+        this.$store.state.user = {}
+      } else {
+        this.$store.state.user = res.data;
+      }
     } else {
       this.$store.state.user = {}
       localStorage.clear();

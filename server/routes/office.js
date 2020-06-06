@@ -39,6 +39,15 @@ router.post('/image/:id', (req, res) => {
     });
 });
 
+router.get('/user/:id', (req, res) => {
+    office.find({owner:req.params.id}, (err, data) => {
+        if(err)
+            res.status(400).json(err);
+        else
+            res.json(data);
+    });
+});
+
 router.get('/:id', (req, res) => {
     office.findOne({_id:req.params.id}).populate({path:'location', populate:{path:'state'}}).exec((err, data) => {
         if(err)
