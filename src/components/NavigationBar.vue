@@ -24,8 +24,9 @@
 
 		<b-container
 			fluid
-			class="bg-white shadow d-block d-md-none py-3 position-absolute"
-			style="bottom:0; left:0">
+			class="bg-white shadow d-block d-md-none py-3 fixed-bottom"
+			
+      >
 			<b-row>
 				<b-col v-for="nav in navigation" :key="nav.name" class="text-center">
 					<b-link
@@ -66,7 +67,7 @@ export default {
 	text-decoration: none !important;
 }
 .nav-icon {
-	font-size: 2rem;
+	font-size: 1.75rem;
 }
 .nav-icon,
 .nav-icon + span {

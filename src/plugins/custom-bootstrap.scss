@@ -10,5 +10,23 @@ $border-radius-sm:            .4rem !default;
 	transform: translateY(-50%);
 }
 
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.truncate-paragraph {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;  
+}
+
+.img-cover {
+	background-repeat: no-repeat !important;
+	background-size: cover !important;
+}
+
 @import '~bootstrap/scss/bootstrap.scss';
 @import '~bootstrap-vue/src/index.scss';
