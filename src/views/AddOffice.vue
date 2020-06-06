@@ -1,7 +1,6 @@
 <template>
     <div id="AddOffice" style="margin: 10px">
-        <h1>Agregar una oficina</h1>
-        <h1>Agregar una oficina</h1>
+        <h1 style="margin-top: 100px;">Agregar una oficina</h1>
         <b-form> <!--Los inputs no están en orden-->
             <b-input id="name" type="text" placeholder="Escribe un nombre de oficina" v-model="office.name.value" :state="office.name.state" @blur="office.name.validate(office.name)"></b-input>
             <AreaEditor @update="updateDescription" :content="office.description.value"/>
@@ -70,12 +69,16 @@ export default {
         AreaEditor
     },
     mounted(){
-        axios.get(this.$store.state.serverPath + '/api/state').then(res => {
-            this.states = res.data;
-            this.states.unshift({_id:'', name:'Elija un estado'});
-        }).catch(err => {
-            console.log(err);
-        });
+        if(this.$store.state.user == null)
+            this.$router.push('/');
+        else{
+            axios.get(this.$store.state.serverPath + '/api/state').then(res => {
+                this.states = res.data;
+                this.states.unshift({_id:'', name:'Elija un estado'});
+            }).catch(err => {
+                console.log(err);
+            });
+        }
     },
     methods:{
         updateDescription(html){

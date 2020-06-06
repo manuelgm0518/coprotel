@@ -32,6 +32,10 @@ export default {
             }
         }
     },
+    mounted(){
+        if(this.$store.state.user != null)
+            this.$router.push('/');
+    },
     methods:{
         test(){
             this.changeState();

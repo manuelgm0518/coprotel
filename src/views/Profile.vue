@@ -29,7 +29,9 @@
             <b-button variant="primary" @click="mostrar = !mostrar, changePfp()">Editar</b-button>
         </template>
         <br>
+      <b-button variant="danger" @click="logOut">Cerrar sesión</b-button>
       <h2>Mis oficinas</h2>
+      <b-button variant="warning" @click="$router.push('/addoffice')">Agregar una oficina</b-button>
       <b-card v-for="(office, i) in offices" v-bind:key="i">
         <h3>{{office.name}}</h3>
         <img :src="$store.state.serverPath + '/file/' + offices[i].images[0]">
@@ -88,6 +90,10 @@ export default {
       },
       goOffice(office){
         this.$router.push('/office/' + office._id);
+      },
+      logOut(){
+        localStorage.clear();
+        this.$router.go();
       }
   }
   

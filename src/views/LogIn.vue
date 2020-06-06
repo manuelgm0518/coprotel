@@ -68,6 +68,10 @@ export default {
             passwordState: null
         }
     },
+    mounted(){
+        if(this.$store.state.user != null)
+            this.$router.push('/');
+    },
     methods:{
         checkFormValidity() {
             const valid = this.$refs.form.checkValidity()
@@ -112,7 +116,7 @@ export default {
                     }
                     else {
                         localStorage.setItem('token', res.data);
-                        this.$router.push('/');
+                        this.$router.go();
                     }
                 }).catch(err => {
                     console.log(err);
