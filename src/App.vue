@@ -14,7 +14,7 @@ export default {
   components: {
     NavigationBar
   },
-  async created(){
+  created(){
     if(localStorage.getItem('token')){
       axios.get(this.$store.state.serverPath + '/api/user/logIn/verify/' + localStorage.getItem('token')).then(res => {
         if(res.data.unauthorized){

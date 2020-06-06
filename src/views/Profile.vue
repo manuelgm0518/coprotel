@@ -65,27 +65,14 @@ export default {
       offices:[]
     }
   },
-  async created(){
-    if(localStorage.getItem('token')){
-      var err, res = await axios.get(this.$store.state.serverPath + '/api/user/logIn/verify/' + localStorage.getItem('token'))
-      if(err)
-        console.log(err);
-      else{
-        if(res.data.unauthorized){
-          localStorage.clear();
-        } else {
-          this.user = res.data;
-          axios.get(this.$store.state.serverPath + '/api/office/user/' + res.data._id).then(res => {
-            console.log(res.data);
-            this.offices = res.data;
-          }).catch(err => {
-            console.log(err);
-          });
-        }
-      }
-    } else {
-      localStorage.clear();
-    }
+  mounted(){
+    this.user = this.$store.state.user;
+    axios.get(this.$store.state.serverPath + '/api/office/user/' + this.user._id).then(res => {
+      console.log(res.data);
+      this.offices = res.data;
+    }).catch(err => {
+      console.log(err);
+    });
   },
   methods:{
       changePfp(){
