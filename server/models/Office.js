@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 const user = require('./User');
-const state = require('./State');
+const municipality = require('./Municipality');
 const Schema = mongoose.Schema;
 
 var office = new Schema({
     name:{type:String, required:[true, 'No office name']},
     description:{type:String, required:[true, 'No office description']},
     owner:{type:mongoose.Schema.Types.ObjectId, ref:user, required:[true, 'No office owner']},
-    location:{type:mongoose.Schema.Types.ObjectId, ref:state, required:[true, 'No office location']},
+    location:{type:mongoose.Schema.Types.ObjectId, ref:municipality, required:[true, 'No office location']},
     rentAmount:{type:Number, default:0},
     contact:{type:String, required:[true, 'No office contact']},
     area:{type:Number, default:0},
@@ -17,7 +17,8 @@ var office = new Schema({
     rents:[{
         lessee:{type:mongoose.Schema.Types.ObjectId, ref:user, required:[true, 'No office rents lesse']},
         date:{type:Date, default:Date.now}
-    }]
+    }],
+    keywords:[{type:String, required:[true, 'No office keyword']}]
 });
 
 module.exports = mongoose.model('office', office);

@@ -1,9 +1,9 @@
 const express = require('express');
-const state = require('../models/State');
+const municipality = require('../models/Municipality');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    state.find({}, (err, data) => {
+    municipality.find({}, (err, data) => {
         if(err)
             res.status(400).json(err);
         else
@@ -11,9 +11,8 @@ router.get('/', (req, res) => {
     })
 });
 
-
 router.post('/', (req, res) => {
-    state.create(req.body, (err, data) => {
+    municipality.create(req.body, (err, data) => {
         if(err)
             res.status(400).json(err);
         else
@@ -21,5 +20,13 @@ router.post('/', (req, res) => {
     });
 });
 
+router.get('/:state', (req, res) => {
+    municipality.find({state:req.params.state}, (err, data) => {
+        if(err)
+            res.status(400).json(err);
+        else
+            res.json(data);
+    });
+});
 
 module.exports = router;

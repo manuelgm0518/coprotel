@@ -14,14 +14,14 @@
             <b-input id="confirmPassword" type="password" placeholder="Confirmar contraseña" v-model="user.confirmPassword.value" :state="user.confirmPassword.state"  @blur="user.confirmPassword.verify(user.confirmPassword)"></b-input>                
             <label for="phone">Teléfono (opcional)</label>
             <b-input id="phone" type="text" placeholder="Tu teléfono" v-model="user.phone.value" :state="user.phone.state"></b-input>
-            <label for="location">Selecciona tu país y estado</label>
-            <b-select v-model="user.country.value" :state="user.country.state" @change="loadStates(); user.country.verify(user.country);">
-                <option v-for="(country, i) in countries" v-bind:key="i" :value="country._id">{{country.name}}</option>
+            <label for="location">Selecciona tu estado y municipio</label>
+            <b-select v-model="user.state.value" :state="user.state.state" @change="loadMunicipalities(); user.state.verify(user.state);">
+                <option v-for="(state, i) in states" v-bind:key="i" :value="state._id">{{state.name}}</option>
             </b-select> 
             <b-select v-model="user.location.value" :state="user.location.state" @change="user.location.verify(user.location)">
-                <option v-for="(state, j) in states" v-bind:key="j" :value="state._id">{{state.name}}</option>
-            </b-select>
-            <b-button type="button" variant="primary" @click="test">Regístrate</b-button>
+                <option v-for="(municipality, j) in municipalities" v-bind:key="j" :value="municipality._id">{{municipality.name}}</option>
+            </b-select> 
+            <b-button type="button" variant="primary" @click="register">Regístrate</b-button>
         </b-form>
     </div>
 </template>
@@ -29,7 +29,7 @@
 <script>
 import axios from 'axios';
 
-export default {
+export default { //ok
     data(){
         return {
             user:{
@@ -39,23 +39,23 @@ export default {
                 password:{value:'', state:null, verify:this.verifyText},
                 confirmPassword:{value:'', state:null, verify:this.verifyPassword},
                 phone:{value:'', state:null, verify:this.verifyPhone},
-                country:{value:'', state:null, verify:this.verifyText},
+                state:{value:'', state:null, verify:this.verifyText},
                 location:{value:'', state:null, verify:this.verifyText}
             },
-            countries:[],
-            states:[{name:'Elija un estado', _id:''}]
+            states:[],
+            municipalities:[{name:'Elija un municipio', _id:''}]
         }
     },
-    created(){
-        axios.get(this.$store.state.serverPath + '/api/country').then(res => {
-            this.countries = res.data;
-            this.countries.unshift({name:"Elija un país", _id:""});
+    created(){ //ok
+        axios.get(this.$store.state.serverPath + '/api/state').then(res => {
+            this.states = res.data;
+            this.states.unshift({name:"Elija un estado", _id:""});
         }).catch(err => {
             console.log(err);
         });
     },
     methods:{
-        test(){
+        register(){
             this.changeState();
             if(this.validateInput()){
                 let data = {
@@ -117,15 +117,15 @@ export default {
             if(input.value != '')
                 input.state = true;
         },
-        loadStates(){
+        loadMunicipalities(){ //ok
             this.user.location.value = '';
-            if(this.user.country.value == '')
-                this.states = [{name:'Elija un estado', _id:''}];
+            if(this.user.state.value == '')
+                this.municipalities = [{name:'Elija un municipio', _id:''}];
             else{
-                axios.get(this.$store.state.serverPath + '/api/state/' + this.user.country.value)
+                axios.get(this.$store.state.serverPath + '/api/municipality/' + this.user.state.value)
                 .then(res => {
-                    this.states = res.data;
-                    this.states.unshift({name:"Elija un estado", _id:""});
+                    this.municipalities = res.data;
+                    this.municipalities.unshift({name:"Elija un municipio", _id:""});
                 }).catch(err => {
                     console.log(err);
                 });

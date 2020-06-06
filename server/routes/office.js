@@ -1,4 +1,5 @@
 const express = require('express');
+var fs = require('fs');
 const office = require('../models/Office');
 const router = express.Router();
 
@@ -17,6 +18,19 @@ router.get('/', (req, res) => {
             res.status(400).json(err);
         else
             res.json(data);
+    });
+});
+
+router.post('/image', (req, res) => {
+    var fstream;
+    req.pipe(req.busboy);
+    req.busboy.on('file', function (fieldname, file, filename) {
+        console.log("Uploading: " + filename);
+        fstream = fs.createWriteStream(__dirname + '/files/' + filename);
+        file.pipe(fstream);
+        fstream.on('close', function () {
+            res.status(200).json({});
+        });
     });
 });
 
