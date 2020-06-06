@@ -1,8 +1,7 @@
 <template>
     <div id="AddOffice" style="margin: 10px">
-        <h1>Agregar una oficina</h1>
-        <h1>Agregar una oficina</h1>
-        <b-form>
+        <h1 style="margin-top: 100px;">Agregar una oficina</h1>
+        <b-form> <!--Los inputs no están en orden-->
             <b-input id="name" type="text" placeholder="Escribe un nombre de oficina" v-model="office.name.value" :state="office.name.state" @blur="office.name.validate(office.name)"></b-input>
             <AreaEditor @update="updateDescription" :content="office.description.value"/>
             <p v-if="!office.description.state && office.description.state != null"><i style="color:red;">Debe escribir una descripción</i></p> <!--Falta ponerlo más bonito-->
@@ -39,7 +38,6 @@
             ></b-file>
             <b-button type="button" variant="warning" @click="add">Agregar</b-button>
         </b-form>
-        <input type="file" ref="file"/>
     </div>
 </template>
 
@@ -54,7 +52,6 @@ export default {
             office:{
                 name:{value:'', state:null, validate:this.validateText},
                 description:{value:'<p>Escribe una descripción de la oficina</p>', state:null, validate:this.validateTextArea},
-                ownwer:'', //Xd
                 state:{value:'', state:null, validate:this.validateSelect},
                 location:{value:'', state:null, validate:this.validateSelect},
                 rentAmount:{value:'', state:null, validate:this.validateFloat},
@@ -72,12 +69,16 @@ export default {
         AreaEditor
     },
     mounted(){
-        axios.get(this.$store.state.serverPath + '/api/state').then(res => {
-            this.states = res.data;
-            this.states.unshift({_id:'', name:'Elija un estado'});
-        }).catch(err => {
-            console.log(err);
-        });
+        if(this.$store.state.user == null)
+            this.$router.push('/');
+        else{
+            axios.get(this.$store.state.serverPath + '/api/state').then(res => {
+                this.states = res.data;
+                this.states.unshift({_id:'', name:'Elija un estado'});
+            }).catch(err => {
+                console.log(err);
+            });
+        }
     },
     methods:{
         updateDescription(html){
@@ -173,21 +174,41 @@ export default {
             this.office.images.value.push(null);
         },
         add(){
-            var formData = new FormData();
-            var imagefile = this.$refs.file;
-            formData.append("image", imagefile.files[0]);
-            axios.post(this.$store.state.serverPath + '/api/office/image', formData, { headers: {'Content-Type': 'multipart/form-data'}})
-            .then(res => {
-                console.log(res);
-            }).catch(err => {
-                console.log(err);
-            });
-            /*this.changeStates();
+            this.changeStates();
             if(this.validateInputs()){
-                
+                while(this.office.keywords.value.indexOf('') != -1)
+                    this.office.keywords.value.splice(this.office.keywords.value.indexOf(''), 1);
+                while(this.office.images.value.indexOf(null) != -1)
+                    this.office.images.value.splice(this.office.images.value.indexOf(null), 1);
+                let send = {
+                    name:this.office.name.value,
+                    description:this.office.description.value,
+                    owner:this.$store.state.user._id,
+                    location:this.office.location.value,
+                    rentAmount:this.office.rentAmount.value,
+                    contact:this.office.contact.value,
+                    area:this.office.area.value,
+                    capacity:this.office.capacity.value,
+                    keywords:this.office.keywords.value,
+                    images:[]
+                };
+                axios.post(this.$store.state.serverPath + '/api/office', send).then(async res => {
+                    if(res.status == 200){
+                        //////////////////////////////// Aquí estaría chido poner un overlay porque las imagenes tardan en subirse xd
+                        for(var img of this.office.images.value){
+                            var formData = new FormData();
+                            formData.append('image', img);
+                            res = await axios.post(this.$store.state.serverPath + '/api/office/image/' + res.data._id, formData, { headers: {'Content-Type': 'multipart/form-data'}})
+                        }
+                        alert('Aquí falta asignar la página de regreso'); //Falta poner la página de regreso
+                        this.$router.push('/');
+                    }
+                }).catch(err => {
+                    console.log(err);
+                });
             }
             else
-                alert('Joaquín c la come porque no llenaste todos los campos');*/
+                alert('Joaquín c la come porque no llenaste todos los campos'); //Falta ponerlo más bonito
         }
     }
 }

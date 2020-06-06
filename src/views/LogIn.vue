@@ -3,7 +3,7 @@
         <h2>Iniciar sesión</h2>
         
 
-        <b-button v-b-modal.modal-prevent-closing>Sign In</b-button>  
+         <b-button v-b-modal.modal-prevent-closing>Sign In</b-button>
 
         <b-modal
             id="modal-prevent-closing"
@@ -68,6 +68,10 @@ export default {
             passwordState: null
         }
     },
+    mounted(){
+        if(this.$store.state.user != null)
+            this.$router.push('/');
+    },
     methods:{
         checkFormValidity() {
             const valid = this.$refs.form.checkValidity()
@@ -112,7 +116,7 @@ export default {
                     }
                     else {
                         localStorage.setItem('token', res.data);
-                        this.$router.push('/');
+                        this.$router.go();
                     }
                 }).catch(err => {
                     console.log(err);
@@ -129,3 +133,4 @@ export default {
 <style scoped>
 
 </style>
+
