@@ -1,25 +1,104 @@
 <template>
-  <b-container fluid class="bg-light vh-100" style="padding-top:4rem">
+  <div>
+  <b-container fluid class="bg-light vh-10" style="padding-top:4rem">
     <NavigationBar/>
     <div class="vertical-middle text-center">
-      <h1>
-        Joaqín c la come desde el Perfil
-      </h1>
-      <h3 class="d-block d-lg-none">en responsive xd</h3>
+    <br><br>
     </div>
   </b-container>
+  <b-container>
+    <div class="vertical-left text center">
+      <br>
+      <h2>Mi perfil</h2>
+      <br>
+      <div>
+        <h5>Nombre: {{user.name}}</h5>
+        <h5>Apellido: {{user.lastName}}</h5>
+        <h5>Correo electrónico: {{user.email}}</h5>
+        <h5>Estado: {{user.location.state.name}}</h5>
+        <h5>Municipio: {{user.location.name}}</h5>
+        <img :src="user.image">
+        <b-button variant="primary" @click="mostrar = !mostrar">Editar imagen</b-button>
+        <template v-if="mostrar">
+            <b-file
+                class="image"
+                placeholder="Elige una imagen"
+            ></b-file>
+        </template>
+        <br>
+      <h2>Mis oficinas</h2>
+      <b-card v-for="(office, i) in offices" v-bind:key="i">
+        <h3>{{office.name}}</h3>
+        <img :src="$store.state.serverPath + '/file/' + offices[i].images[0]">
+        <b-button variant="success" @click="goOffice(office)">Ver más</b-button>
+        
+        <!-- <b-link src='/office/' + offices[i]._id>
+        <h3>{{offices[i].name}}</h3>
+         
+        </b-link> -->
+      </b-card>
+      </div>
+    </div>
+  </b-container>
+  </div>
 </template>
 
 <script>
 import NavigationBar from '../components/NavigationBar'
+import axios from 'axios';
+
 export default {
   name: 'Profile',
   components: {
     NavigationBar
+  },
+  data(){
+    return{
+      mostrar:false,
+      user:{
+        name:'',
+        lastName:'',
+        email:'',
+        location:{name:'', state:{name:''}},
+        image:''
+      },
+      offices:[]
+    }
+  },
+  async created(){
+    if(localStorage.getItem('token')){
+      var err, res = await axios.get(this.$store.state.serverPath + '/api/user/logIn/verify/' + localStorage.getItem('token'))
+      if(err)
+        console.log(err);
+      else{
+        if(res.data.unauthorized){
+          localStorage.clear();
+        } else {
+          this.user = res.data;
+          axios.get(this.$store.state.serverPath + '/api/office/user/' + res.data._id).then(res => {
+            console.log(res.data);
+            this.offices = res.data;
+          }).catch(err => {
+            console.log(err);
+          });
+        }
+      }
+    } else {
+      localStorage.clear();
+    }
+  },
+  methods:{
+      changePfp(){
+          
+      },
+      goOffice(office){
+        this.$router.push('/office/' + office._id);
+      }
   }
 }
 </script>
 
 <style>
-
+ 
 </style>
+    
