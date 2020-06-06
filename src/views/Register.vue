@@ -1,6 +1,6 @@
 <template>
     <div id=Register>
-        <h2>Regístrate</h2>
+       <h2>Regístrate</h2>
         <b-form>
             <label for="name">Nombre</label>
             <b-input id="name" type="text" placeholder="Tu nombre" v-model="user.name.value" :state="user.name.state" @blur="user.name.verify(user.name)"></b-input>
