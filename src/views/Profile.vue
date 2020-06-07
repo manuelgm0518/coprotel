@@ -17,7 +17,7 @@
 							<div v-if="user.location">
 								<h4>Estado: {{user.location.state.name}}</h4>
 								<h4>Municipio: {{user.location.name}}</h4>
-								<!--<img :src="$store.state.serverPath + '/file/' + user.image">-->
+								<img :src="$store.state.serverPath + '/file/' + user.image">
 								<b-button variant="primary" @click="mostrar = !mostrar">Editar imagen</b-button>
 								<template v-if="mostrar">
 									<b-file class="image" placeholder="Elige una imagen" v-model="tempimg" @input="tempimg"></b-file>
@@ -46,7 +46,7 @@
 						<div v-if="offices">
 							<b-card v-for="(office, i) in offices" v-bind:key="i">
 								<h3>{{office.name}}</h3>
-								<!--<img :src="$store.state.serverPath + '/file/' + offices[i].images[0]">-->
+								<img :src="$store.state.serverPath + '/file/' + offices[i].images[0]">
 								<b-button variant="success" @click="goOffice(office)">Ver más</b-button>
 							</b-card>
 						</div>
