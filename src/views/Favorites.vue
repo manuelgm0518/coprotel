@@ -28,8 +28,9 @@ export default {
   },
   mounted(){
     this.user = this.$store.state.user;
-    if(this.user.admin == true)
-      this.user = null;
+    if(this.user.admin)
+      if(this.user.admin == true)
+        this.user = null;
     if(this.user != null)
       axios.post(this.$store.state.serverPath + '/api/office/favorites', {offices:this.user.favorites}).then(res => {
         if(res.status == 200)
