@@ -3,12 +3,11 @@
 <b-overlay :show="!loaded" no-wrap/>
 
   <b-carousel controls class="w-100">
-				<b-carousel-slide v-for="office in offices" :key="office._id">
+				<b-carousel-slide v-for="(jumbo,i) in jumbotronInfo" :key="i">
 					<template slot="img">
-						<b-container class="">
-							<b-jumbotron header="BootstrapVue" class="bg-dark truncate" lead="Bootstrap v4 Components for Vue.js 2">
-								<p>For more information visit website</p>
-								<b-button variant="primary" href="#">More Info</b-button>
+						<b-container>
+							<b-jumbotron :header="jumbo.title" :lead="jumbo.subtitle" class="bg-dark truncate" >
+								<p>{{jumbo.text}}</p>
 							</b-jumbotron>
 						</b-container>
 					</template>
@@ -24,9 +23,14 @@
 
       <div class="dropdown-divider my-3 border"></div>
 
-      <div class="">
-        esfesrgdtf
-      </div>
+      <b-row cols="1" cols-md="2" class="text-center">
+        <b-col>
+          <h1>Título</h1><p>Información</p>
+        </b-col>
+        <b-col>
+          <h1>Título</h1><p>Información</p>
+        </b-col>
+      </b-row>
 
 
 </b-container>
@@ -43,7 +47,12 @@ export default {
 	},
 	data: () => ({
 		offices: [],
-		loaded: false
+    loaded: false,
+    jumbotronInfo: [
+      { image: "../resources/carousel-1.jpg", title:"Título 1", subtitle:"Subtítulo 1", text:"Texto 1"},
+      { image: "../resources/carousel-2.jpg", title:"Título 1", subtitle:"Subtítulo 1", text:"Texto 2"},
+      { image: "../resources/carousel-3.jpg", title:"Título 1", subtitle:"Subtítulo 1", text:"Texto 3"}
+    ]
 	}),
 	mounted() {
     this.loaded = false;
