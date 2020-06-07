@@ -4,7 +4,7 @@
         <b-card style="max-width: 60rem;" class=".card">
 
         <!-- Los datos no están en orden -->
-        <h1 style="margin-top: 100px;">Oficina</h1>
+        <h1 class="mt-4">Oficina</h1>
         <h2>{{office.name}}</h2>
         <h3>Imagenes</h3>
         <img height="100px" v-for="(image, i) in office.images" v-bind:key="i" alt="Imagen de una oficina" :src="$store.state.serverPath + '/file/' + office.images[i]">
