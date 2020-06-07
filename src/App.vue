@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <NavigationBar/>
-    <router-view v-if="$store.state.user != null"/>
+    <router-view />
   </div>
 </template>
 
