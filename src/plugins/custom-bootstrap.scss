@@ -4,6 +4,10 @@ $border-radius:               0.5rem !default;
 $border-radius-lg:            0.6rem !default;
 $border-radius-sm:            .4rem !default;
 
+*:focus {
+  outline: none !important;
+}
+
 .vertical-middle {
 	position: relative;
 	top: 50%;
