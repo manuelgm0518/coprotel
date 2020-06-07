@@ -247,13 +247,17 @@ export default { //ok
             municipalities:[{name:'Elija un municipio', _id:''}]
         }
     },
-    created(){ //ok
-        axios.get(this.$store.state.serverPath + '/api/state').then(res => {
-            this.states = res.data;
-            this.states.unshift({name:"Elija un estado", _id:""});
-        }).catch(err => {
-            console.log(err);
-        });
+    mounted(){ //ok
+        if(this.$store.state.user != null)
+            this.$router.push('/');
+        else{
+            axios.get(this.$store.state.serverPath + '/api/state').then(res => {
+                this.states = res.data;
+                this.states.unshift({name:"Elija un estado", _id:""});
+            }).catch(err => {
+                console.log(err);
+            });
+        }
     },
     methods:{
         checkFormValidity() {

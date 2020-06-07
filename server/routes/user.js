@@ -1,6 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const fs = require('fs');
 const user = require('../models/User');
 const admin = require('../models/Admin');
 const router = express.Router();
@@ -54,8 +55,17 @@ router.get('/logIn/verify/:token', (req, res) => {
                     if(err)
                         res.status(400).json(err);
                     else
-                        if(data != null)
-                            res.json(data);
+                        if(data != null){
+                            let send = {
+                                email:data.email,
+                                lastName:data.lastName,
+                                name:data.name,
+                                password:data.password,
+                                _id:data._id,
+                                admin:true
+                            }
+                            res.json(send);
+                        }
                         else
                             res.json({unauthorized:true});
                 });
@@ -64,13 +74,44 @@ router.get('/logIn/verify/:token', (req, res) => {
                     if(err)
                         res.status(400).json(err);
                     else
-                        if(data != null)
-                            res.json(data);
+                        if(data != null){
+                            let send = {
+                                email:data.email,
+                                image:data.image,
+                                lastName:data.lastName,
+                                location:data.location,
+                                name:data.name,
+                                password:data.password,
+                                phone:data.phone,
+                                _id:data._id,
+                                favorites:data.favorites,
+                                admin:false
+                            }
+                            res.json(send);
+                        }
                         else
                             res.json({unauthorized:true});
                 });
             }
         }
+    });
+});
+
+router.post('/favorite/add', (req, res) => {
+    user.updateOne({_id:req.body.user}, {$push:{favorites:req.body.office}}, (err, data) => {
+        if(err)
+            res.status(400).json(err);
+        else
+            res.json(data);
+    });
+});
+
+router.post('/favorite/quit', (req, res) => {
+    user.updateOne({_id:req.body.user}, {$pull:{favorites:req.body.office}}, (err, data) => {
+        if(err)
+            res.status(400).json(err);
+        else
+            res.json(data);
     });
 });
 
@@ -117,6 +158,26 @@ router.post('/admin', (req, res) => {
             } else {
                 res.json({error:'Admin already exists'});
             }
+    });
+});
+
+router.post('/image/:id', (req, res) => {
+    var fstream;
+    req.pipe(req.busboy);
+    req.busboy.on('file', function (fieldname, file, filename) {
+        console.log("Uploading: " + filename);
+        console.log(filename);
+        user.updateOne({_id:req.params.id}, {$set:{image:filename}}, (err, data) => {
+            if(err)
+                console.log(err);
+            else
+                console.log(data);
+        });
+        fstream = fs.createWriteStream(__dirname + '/files/' + filename);
+        file.pipe(fstream);
+        fstream.on('close', function () {
+            res.status(200).json({});
+        });
     });
 });
 

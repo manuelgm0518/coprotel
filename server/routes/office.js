@@ -21,6 +21,15 @@ router.get('/', (req, res) => {
     });
 });
 
+router.delete('/:id', (req, res) => {
+    office.deleteOne({_id:req.params.id}, (err, data) => {
+        if(err)
+            res.status(400).json(err);
+        else
+            res.json(data);
+    });
+});
+
 router.post('/image/:id', (req, res) => {
     var fstream;
     req.pipe(req.busboy);
@@ -46,6 +55,20 @@ router.get('/user/:id', (req, res) => {
         else
             res.json(data);
     });
+});
+
+router.post('/favorites', async (req, res) => {
+    var send = [], err, data;
+    for(var ofi of req.body.offices){
+        err, data = await office.findOne({_id:ofi});
+        if(err)
+            break;
+        send.push(data);
+    }
+    if(err)
+        res.status(400).json(err);
+    else
+        res.json(send);
 });
 
 router.get('/:id', (req, res) => {

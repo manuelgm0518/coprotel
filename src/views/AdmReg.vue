@@ -143,6 +143,10 @@ export default {
             }
         }
     },
+    mounted(){
+        if(this.$store.state.user != null)
+            this.$router.push('/');
+    },
     methods:{
         checkFormValidity() {
             const valid = this.$refs.form.checkValidity()
