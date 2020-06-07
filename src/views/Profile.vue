@@ -1,7 +1,84 @@
 <template>
-<b-container class="vh-100">
-      <div v-if="!$store.state.user" style="height:80vh">
-      <LoginError message="Inicia sesión para poder revisar tu perfil." class="vertical-middle" />
+  <div>
+    <div  v-if="!user">
+      <b-card>
+        <h4>Inicia sesión para ver tu perfil</h4>
+        <b-button variant="success" @click="goLogin()">Inicia sesión</b-button>
+        <br><br>
+        <h4>¿Aún no tienes cuenta? ¡Regístrate aquí!</h4>
+        <b-button variant="success" @click="goRegister()">Regístrate</b-button>
+      </b-card>
+    </div>
+    <div v-else>
+      <div>
+        <b-card style="max-width: 60rem;" class=".card mt-4" deck>
+          <div class="mt-4">
+            <h1>Mi perfil</h1>
+            <b-card img-src="https://placekitten.com/300/300" img-left class="mb-3">
+              <b-card-text>
+                <h4>Nombre: {{user.name}}</h4>
+                <h4>Apellido: {{user.lastName}}</h4>
+                <h4>Correo electrónico: {{user.email}}</h4>
+                <div v-if="user.location">
+                  <h4>Estado: {{user.location.state.name}}</h4>
+                  <h4>Municipio: {{user.location.name}}</h4>
+                  <!--<img :src="$store.state.serverPath + '/file/' + user.image">-->
+                  <b-button variant="primary" @click="mostrar = !mostrar">Editar imagen</b-button>
+                  <template v-if="mostrar">
+                    <b-file
+                      class="image"
+                      placeholder="Elige una imagen" 
+                      v-model="tempimg"
+                      @input="tempimg"
+                    ></b-file>
+                    <b-button class="btn btn-primary btn-lg" style="float:right;" variant="primary" @click="mostrar = !mostrar, changePfp()">Editar</b-button>
+                  </template>
+                  <b-button class="btn btn-primary btn-lg" style="float:right;" variant="danger" @click="logOut">Cerrar sesión</b-button>
+                </div>
+              </b-card-text>
+            </b-card>
+          </div>
+        </b-card>
+        <div v-if="user.location">
+          <b-card style="max-width: 60rem;" class=".card mt-4" deck>
+            <div class="mt-4">
+              <h2>Mis oficinas</h2>
+                <div v-if="offices">
+                  <b-card v-for="(office, i) in offices" v-bind:key="i">
+                    <h3>{{office.name}}</h3>
+                    <!--<img :src="$store.state.serverPath + '/file/' + offices[i].images[0]">-->
+                    <b-button variant="success" @click="goOffice(office)">Ver más</b-button>
+                  </b-card>
+                </div> <div v-else>
+                  <h4>No hay oficinas disponibles para mostrar</h4>
+                </div>
+            </div>
+          </b-card>
+        </div>
+        <div>
+          <b-card style="max-width: 60rem;" class=".card mt-4" deck>
+            <div class="mt-4">
+              <h2>Mis rentas</h2>
+                <div v-if="rents">
+                <b-card v-for="(rent, i) in rents" v-bind:key="i">
+                  <h3>{{rent.name}}</h3>
+                  <img :src="$store.state.serverPath + '/file/' + rents[i].images[0]">
+                  <b-button variant="success" @click="goOffice(rent)">Ver más</b-button>
+                </b-card>
+                </div><div v-else>
+                  <h4>No estás rentando ninguna oficina actualmente</h4>
+                </div>
+            </div>
+          </b-card>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--<b-container fluid class="bg-light vh-10" style="padding-top:4rem">
+    <NavigationBar/>
+    <div class="vertical-middle text-center">
+    <br><br>
     </div>
     <div v-else>
       <div class="vertical-left text center">
@@ -58,8 +135,8 @@
     </div>
     </div>
   </b-container>
-
-
+  </div>
+  </div>-->
 </template>
 
 <script>
