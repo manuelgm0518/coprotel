@@ -37,7 +37,9 @@ export default {
 	data() {
 		return {
 			user: null,
-			offices: [],
+      offices: [],
+      statesList: [],
+			municipalitiesList: [],
 			loaded: false
 		};
 	},
@@ -58,7 +60,30 @@ export default {
 				})
 				.catch(err => {
 					console.log(err);
-				});
+        });
+        axios
+			.get(this.$store.state.serverPath + "/api/state")
+			.then(res => {
+        this.statesList = res.data;
+			})
+			.catch(err => {
+				console.log(err);
+			});
+		this.filters = this.$store.state.filters;
+
+		this.loaded = false;
+		axios
+			.get(this.$store.state.serverPath + "/api/office/")
+			.then(res => {
+        this.offices = res.data;
+				this.loaded = true;
+			})
+			.catch(err => {
+				console.log(err);
+      });
+  },
+  updated() {
+		if (this.filters.municipality) this.updateMunicipalities();
 	},
 	methods: {
 		goOffice(office) {
@@ -67,6 +92,20 @@ export default {
 		clearOffices() {
 			while (this.offices.indexOf(null) != -1)
 				this.offices.splice(this.offices.indexOf(null), 1);
+    },
+    updateMunicipalities: function() {
+			axios
+				.get(
+					this.$store.state.serverPath +
+						"/api/municipality/" +
+						this.filters.state
+				)
+				.then(res => {
+					this.municipalitiesList = res.data;
+				})
+				.catch(err => {
+					console.log(err);
+				});
 		}
 	}
 };
