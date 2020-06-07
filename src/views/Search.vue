@@ -82,7 +82,7 @@
 				<b-overlay :show="!loaded" no-wrap class="mt-5 mt-md-0" />
 				<OfficeCard v-for="office in offices" :key="office._id" :officeModel="office" />
         <div style="height:75vh;" v-if="offices.length==0 && loaded">
-          <h3 class="text-center vertical-middle">No se encontraron resultados</h3>
+          <h3 class="text-center vertical-middle text-muted">No se encontraron resultados</h3>
         </div>
         
 			</b-col>

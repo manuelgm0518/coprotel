@@ -18,7 +18,7 @@
 				</b-col>
 			</b-row>
 			<div style="height:75vh;" v-if="offices.length==0 && loaded">
-				<h3 class="text-center vertical-middle">No se encontraron resultados</h3>
+				<h3 class="text-center vertical-middle text-muted">No se encontraron resultados</h3>
 			</div>
 		</div>
 	</b-container>
