@@ -7,7 +7,11 @@
 						Búsqueda
 						<span class="material-icons-round align-bottom mr-1" style="font-size:2rem">search</span>
 					</h3>
-					<b-input placeholder="Busca etiquetas o palabras clave..." v-model="filters.searchText" class="mb-2 mt-3" />
+					<b-input
+						placeholder="Busca etiquetas o palabras clave..."
+						v-model="filters.searchText"
+						class="mb-2 mt-3"
+					/>
 					<b-input-group class="mb-2">
 						<b-form-select v-model="sortOption" :options="sortOptions" />
 						<b-input-group-append>
@@ -19,9 +23,11 @@
 					</b-input-group>
 					<b-button-group class="w-100">
 						<b-button v-b-toggle.filter-collapse variant="light border w-100">
-              <span class="material-icons-round align-bottom mr-1">{{ filterShown ? "expand_more" : "expand_less"}}</span>
-              Filtros
-            </b-button>
+							<span
+								class="material-icons-round align-bottom mr-1"
+							>{{ filterShown ? "expand_less" : "expand_more"}}</span>
+							Filtros
+						</b-button>
 						<b-button variant="danger" @click="cleanFilter">
 							<span class="material-icons-round align-bottom mr-1">cleaning_services</span>
 						</b-button>
@@ -29,18 +35,33 @@
 					<b-collapse id="filter-collapse" v-model="filterShown" class="mt-2">
 						<b-card>
 							<h6>Ubicación</h6>
-							<b-form-select v-model="filters.state" :options="statesList" size="sm"></b-form-select>
-							<b-form-select
-								v-model="filters.municipality"
-								:options="municipios"
-								size="sm"
-								:disabled="filters.state==''"
-								class="mt-2"
-							/>
+							<b-form-select v-model="filters.state" size="sm" @change="updateMunicipalities" class="mb-2">
+								<option v-for="(state,i) in statesList" :key="i" :value="state._id">{{ state.name }}</option>
+							</b-form-select>
+
+							<b-form-select v-model="filters.municipality" :disabled="filters.state==''" size="sm">
+								<option
+									v-for="(municipality,j) in municipalitiesList"
+									:key="j"
+									:value="municipality._id"
+								>{{ municipality.name }}</option>
+							</b-form-select>
 							<h6 class="mt-3">Precio</h6>
 							<b-input-group size="sm">
-								<b-form-input size="sm" placeholder="Desde" min="0" type="number" v-model="filters.minPrice" />
-								<b-form-input size="sm" placeholder="Hasta" min="0" type="number" v-model="filters.maxPrice" />
+								<b-form-input
+									size="sm"
+									placeholder="Desde"
+									min="0"
+									type="number"
+									v-model="filters.minPrice"
+								/>
+								<b-form-input
+									size="sm"
+									placeholder="Hasta"
+									min="0"
+									type="number"
+									v-model="filters.maxPrice"
+								/>
 							</b-input-group>
 							<h6 class="mt-3">Posteriores a</h6>
 							<b-form-datepicker
@@ -67,7 +88,6 @@
 
 <script>
 import OfficeCard from "../components/OfficeCard";
-import locationFilter from "../resources/location-filter.json";
 import axios from "axios";
 export default {
 	name: "Search",
@@ -80,13 +100,13 @@ export default {
 				searchText: "",
 				state: "",
 				municipality: "",
-				minPrice: 0,
-				maxPrice: 0,
+				minPrice: null,
+				maxPrice: null,
 				afterDate: ""
-      },
-      filterShown:true,
-			locationFilter,
-			statesList: Object.keys(locationFilter),
+			},
+			filterShown: true,
+			statesList: [],
+			municipalitiesList: [],
 			maxDate,
 			offices: [],
 			loaded: false,
@@ -99,7 +119,16 @@ export default {
 		OfficeCard
 	},
 	mounted() {
-    this.filters = this.$store.state.filters;
+		axios
+			.get(this.$store.state.serverPath + "/api/state")
+			.then(res => {
+				this.statesList = res.data;
+			})
+			.catch(err => {
+				console.log(err);
+      });
+      this.filters = this.$store.state.filters;
+      
 		this.loaded = false;
 		axios
 			.get(this.$store.state.serverPath + "/api/office/")
@@ -110,17 +139,15 @@ export default {
 			.catch(err => {
 				console.log(err);
 			});
-	},
-	computed: {
-		municipios: function() {
-			if (this.filters.state != null) return this.locationFilter[this.filters.state];
-			return [];
-		}
-	},
+  },
+  updated() {
+    if(this.filters.municipality)
+        this.updateMunicipalities();
+  },
 	methods: {
 		cleanFilter: function() {
-      this.filters.searchText = "";
-      this.filters.searchTex = "";
+			this.filters.searchText = "";
+			this.filters.searchTex = "";
 			this.filters.state = "";
 			this.filters.municipality = "";
 			this.filters.minPrice = "";
@@ -128,12 +155,26 @@ export default {
 			this.filters.afterDate = "";
 		},
 		searchQuery: function() {
-			this.loaded = false;
-			axios
+      this.loaded = false;
+			/*axios
 				.get(this.$store.state.serverPath + "/api/office/") //Query mamalón
 				.then(res => {
 					this.offices = res.data;
 					this.loaded = true;
+				})
+				.catch(err => {
+					console.log(err);
+				});*/
+		},
+		updateMunicipalities: function() {
+			axios
+				.get(
+					this.$store.state.serverPath +
+						"/api/municipality/" +
+						this.filters.state
+				)
+				.then(res => {
+					this.municipalitiesList = res.data;
 				})
 				.catch(err => {
 					console.log(err);

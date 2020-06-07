@@ -17,16 +17,19 @@
 					<b-row>
 						<b-col class="pr-sm-1" cols="12" sm="6">
 							<h6>Estado</h6>
-							<b-form-select v-model="filters.state" :options="statesList" size="sm"></b-form-select>
+							<b-form-select v-model="filters.state" size="sm" @change="updateMunicipalities">
+								<option v-for="(state,i) in statesList" :key="i" :value="state._id">{{ state.name }}</option>
+							</b-form-select>
 						</b-col>
 						<b-col class="pl-sm-1 pt-2 pt-sm-0" cols="12" sm="6">
 							<h6>Municipio</h6>
-							<b-form-select
-								v-model="filters.municipality"
-								:options="municipios"
-								size="sm"
-								:disabled="filters.state==''"
-							/>
+							<b-form-select v-model="filters.municipality" :disabled="filters.state==''" size="sm">
+								<option
+									v-for="(municipality,j) in municipalitiesList"
+									:key="j"
+									:value="municipality._id"
+								>{{ municipality.name }}</option>
+							</b-form-select>
 						</b-col>
 					</b-row>
 					<b-row>
@@ -69,11 +72,17 @@
 				</div>
 			</div>
 		</button>
+
+		<b-modal id="login-modal" centered title="BootstrapVue">
+			<p class="my-4">Vertically centered modal!</p>
+		</b-modal>
 	</div>
 </template>
 
 <script>
-import locationFilter from "../resources/location-filter.json";
+//import locationFilter from "../resources/location-filter.json";
+import axios from "axios";
+
 export default {
 	data() {
 		const now = new Date();
@@ -84,32 +93,49 @@ export default {
 				searchText: "",
 				state: "",
 				municipality: "",
-				minPrice: 0,
-				maxPrice: 0,
+				minPrice: null,
+				maxPrice: null,
 				afterDate: ""
 			},
-			locationFilter,
-			statesList: Object.keys(locationFilter),
+			statesList: [],
+			municipalitiesList: [],
 			maxDate
 		};
 	},
-	computed: {
-		municipios: function() {
-			if (this.filters.state != null) return this.locationFilter[this.filters.state];
-			return [];
-		}
+	mounted() {
+		axios
+			.get(this.$store.state.serverPath + "/api/state")
+			.then(res => {
+				this.statesList = res.data;
+			})
+			.catch(err => {
+				console.log(err);
+			});
 	},
 	methods: {
 		changeFocus: function() {
 			document.getElementsByClassName("search-field")[0].focus();
-    },
-    gotoSearch: function() {
-      document.getElementsByClassName("search-btn")[0].blur();
-      document.getElementsByClassName("search-bar")[0].blur();
-      this.$store.state.filters = this.filters;
-      if(this.$route.name!='Search')
-        this.$router.push({name:'Search'});
-    }
+		},
+		gotoSearch: function() {
+			document.getElementsByClassName("search-btn")[0].blur();
+			document.getElementsByClassName("search-bar")[0].blur();
+			this.$store.state.filters = this.filters;
+			if (this.$route.name != "Search") this.$router.push({ name: "Search" });
+		},
+		updateMunicipalities: function() {
+			axios
+				.get(
+					this.$store.state.serverPath +
+						"/api/municipality/" +
+						this.filters.state
+				)
+				.then(res => {
+					this.municipalitiesList = res.data;
+				})
+				.catch(err => {
+					console.log(err);
+				});
+		}
 	}
 };
 </script>

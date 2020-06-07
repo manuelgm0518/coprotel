@@ -1,5 +1,5 @@
 <template>
-	<b-card no-body class="overflow-hidden border-0 shadow my-3 p-0">
+	<b-card no-body class="overflow-hidden border-0 shadow my-3 p-0 office-card" @click.stop="gotoOffice">
 		<b-row no-gutters>
 			<b-col md="5">
 				<b-carousel controls>
@@ -23,9 +23,9 @@
 			</b-col>
 			<b-col md="7">
 				<b-button
-					:variant="favorite ? 'outline-secondary' : 'primary'"
+					:variant="favorite ? 'primary' : 'outline-secondary'"
 					class="position-absolute p-2 p-md-1"
-					@click="favorite=!favorite"
+					@click.stop="updateFav"
 					style="top:1rem; right:1rem;"
 				>
 					<span class="material-icons-round align-bottom">star</span>
@@ -66,7 +66,7 @@
 </template>
 
 <script>
-//import axios from 'axios';
+import axios from "axios";
 export default {
 	props: {
 		officeModel: Object
@@ -75,36 +75,12 @@ export default {
 		favorite: false
 	}),
 	mounted() {
-		//alert(this.officeModel);
+		if (this.$store.state.user != null) {
+			for (let fav of this.$store.state.user.favorites) {
+				if (this.officeModel._id == fav) this.favorite = true;
+			}
+		}
 	},
-	/*
-	data: ()=>({
-    officeModel: {
-      images: [],
-		location: "",
-		rentAmount: 0,
-		area: 0,
-		capacity: 0,
-		name: "",
-		description: "",
-		date: "",
-		
-    },
-    favorite: false
-  }),*/
-	/*mounted(){
-    //this.user = this.$store.state.user;
-    axios.get(this.$store.state.serverPath + '/api/office/' + this.officeId).then(res => {
-      console.log(res.data);
-      
-      //this.officeModel = res.data;
-      //this.images = res.images;
-
-
-    }).catch(err => {
-      console.log(err);
-    });
-  },*/
 	computed: {
 		formattedDate() {
 			var utc = new Date(this.officeModel.date).toUTCString();
@@ -113,9 +89,77 @@ export default {
 				"0" + myDate.getMonth()
 			).slice(-2)} / ${myDate.getFullYear()}`;
 		}
+	},
+	methods: {
+		gotoOffice: function() {
+			this.$router.push({
+				name: "Office",
+				params: { officeId: this.officeModel._id }
+			});
+		},
+		updateFav: function() {
+			if (this.$store.state.user == null) {
+				alert("Debe iniciar sesión para poder añadir a favoritos"); //Falta ponerlo más bonito
+			} else if (this.favorite) {
+				axios
+					.post(this.$store.state.serverPath + "/api/user/favorite/quit", {
+						user: this.$store.state.user._id,
+						office: this.officeModel._id
+					})
+					.then(res => {
+						if (res.status == 200) {
+              this.favorite = false;
+              this.upadateUser();
+						}
+					})
+					.catch(err => {
+						console.log(err);
+					});
+			}else{
+        axios
+					.post(this.$store.state.serverPath + "/api/user/favorite/add", {
+						user: this.$store.state.user._id,
+						office: this.officeModel._id
+					})
+					.then(res => {
+						if (res.status == 200) {
+              this.favorite = true;
+              this.upadateUser();
+						}
+					})
+					.catch(err => {
+						console.log(err);
+					});
+      }
+    },
+    upadateUser(){
+            if(localStorage.getItem('token')){
+            axios.get(this.$store.state.serverPath + '/api/user/logIn/verify/' + localStorage.getItem('token')).then(res => {
+                if(res.data.unauthorized){
+                    localStorage.clear();
+                    this.$store.state.user = null;
+                } else {
+                    this.$store.state.user = res.data;
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+            } else {
+                this.$store.state.user = null;
+                localStorage.clear();
+            }
+            this.user = this.$store.state.user;
+        },
 	}
 };
 </script>
 
 <style>
+.office-card {
+	transition: 0.3s;
+}
+.office-card:hover {
+	cursor: pointer;
+	transform: translate(0, -5px);
+}
 </style>
