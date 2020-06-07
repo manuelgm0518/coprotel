@@ -1,5 +1,5 @@
 <template>
-	<b-card class="border-0 shadow overflow-hidden office-card" no-body>
+	<b-card class="border-0 shadow overflow-hidden office-card" no-body @click="gotoOffice">
 		<div class="text-white bg-primary rounded-top p-2 truncate">
 			<span class="material-icons-round align-bottom text-white mr-1">location_on</span>
 			{{ officeModel.location.state.name +", "+officeModel.location.name}}
@@ -47,6 +47,14 @@
 export default {
 props: {
   officeModel: Object
+},
+methods:{
+  gotoOffice: function() {
+			this.$router.push({
+				name: "Office",
+				params: { officeId: this.officeModel._id }
+			});
+		}
 }
 };
 </script>

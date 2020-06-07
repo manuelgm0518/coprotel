@@ -5,72 +5,64 @@
 		</div>
 		<div v-else>
 			<b-overlay :show="!loaded" no-wrap class="mt-5 mt-md-0" />
-			<b-card class="mt-5" deck>
-				<div class="mt-4">
-					<h1>Mi perfil</h1>
-					<b-card img-src="https://placekitten.com/300/300" img-left class="mb-3">
-						<b-card-text>
-							<h4>Nombre: {{user.name}}</h4>
-							<h4>Apellido: {{user.lastName}}</h4>
-							<h4>Correo electrónico: {{user.email}}</h4>
-							<div v-if="user.location">
-								<h4>Estado: {{user.location.state.name}}</h4>
-								<h4>Municipio: {{user.location.name}}</h4>
-								<img :src="$store.state.serverPath + '/file/' + user.image" />
-								<b-button variant="primary" @click="mostrar = !mostrar">Editar imagen</b-button>
-								<template v-if="mostrar">
-									<b-file class="image" placeholder="Elige una imagen" v-model="tempimg" @input="tempimg"></b-file>
-									<b-button
-										class="btn btn-primary btn-lg"
-										style="float:right;"
-										variant="primary"
-										@click="mostrar = !mostrar, changePfp()"
-									>Editar</b-button>
-								</template>
+			<b-row class="mt-md-3">
+				<b-col lg="5">
+					<b-card class="border-0 shadow">
+						<div class="text-center">
+							<b-avatar
+								:src="$store.state.serverPath + '/file/'+ user.image"
+								class="bg-primary p-1"
+								size="10rem"
+							/>
+							<h2 class="mt-3">{{ user.name+" "+user.lastName }}</h2>
+						</div>
+						<h5 class="truncate p-1 text-primary">{{user.location.state.name+", "+user.location.name}}</h5>
+						<h5 class="p1 text-muted">{{user.email}}</h5>
+						<h5 class="p1 text-muted">{{user.phone}}</h5>
+						<b-button variant="outline-secondary mt-3" @click="mostrar=!mostrar" block>Editar imagen</b-button>
+						<b-input-group v-if="mostrar" class="pt-2 pb-3">
+							<b-file class="image" placeholder="Elige una imagen..." v-model="tempimg" @input="tempimg"></b-file>
+							<b-input-group-append>
 								<b-button
-									class="btn btn-primary btn-lg"
-									style="float:right;"
-									variant="danger"
-									@click="logOut"
-								>Cerrar sesión</b-button>
-							</div>
-						</b-card-text>
+									class="btn btn-primary"
+									variant="primary"
+									@click="mostrar=!mostrar, changePfp()"
+								>Guardar</b-button>
+							</b-input-group-append>
+						</b-input-group>
+						<b-button variant="outline-danger" @click="logOut" block>Cerrar sesión</b-button>
 					</b-card>
-				</div>
-			</b-card>
+				</b-col>
 
-			<div v-if="user.location">
-				<h2>Mis oficinas</h2>
-
-				<b-card v-for="(office, i) in offices" v-bind:key="i">
-					<h3>{{office.name}}</h3>
-					<img :src="$store.state.serverPath + '/file/' + offices[i].images[0]" />
-					<b-button variant="success" @click="goOffice(office)">Ver más</b-button>
-				</b-card>
-
-				<div v-if="offices.length==0">
-					<h5 class="text-muted">Aún no has registrado ninguna oficina</h5>
-				</div>
-				<div v-else>
-					<h4>No hay oficinas disponibles para mostrar</h4>
-				</div>
-			</div>
-
-			<b-button variant="warning" @click="$router.push('/addoffice')">Agregar una oficina</b-button>
-
-			<div></div>
+				<b-col>
+					<b-card class="border-0 shadow">
+						<b-row>
+							<h1 class="ml-3">Mis oficinas</h1>
+							<b-col v-for="(office, i) in offices" v-bind:key="i" lg="6">
+								<OfficeCardSmall :officeModel="office" />
+							</b-col>
+							<div v-if="offices.length==0 && loaded">
+								<h4 class="text-muted ml-3">Aún no has registrado ninguna oficina</h4>
+							</div>
+						</b-row>
+            <b-button variant="primary float-right mt-4" @click="$router.push('/addoffice')">Agregar una oficina</b-button>
+					</b-card>
+				</b-col>
+			</b-row>
 		</div>
 	</b-container>
 </template>
 
 <script>
 import LoginError from "../components/LoginError";
+import OfficeCardSmall from "../components/OfficeCardSmall";
 import axios from "axios";
 
 export default {
 	name: "Profile",
 	components: {
-		LoginError
+		LoginError,
+		OfficeCardSmall
 	},
 	data() {
 		return {
@@ -78,11 +70,13 @@ export default {
 			tempimg: null,
 			loaded: false,
 			user: {
+        _id: "",
 				name: "",
 				lastName: "",
 				email: "",
 				location: { name: "", state: { name: "" } },
-				image: ""
+				image: "",
+				phone: ""
 			},
 			offices: [],
 			rents: []
@@ -122,8 +116,8 @@ export default {
 				formData,
 				{ headers: { "Content-Type": "multipart/form-data" } }
 			);
-			alert("aah"); //Falta poner la página de regreso
-			this.$router.push("/");
+      if(this.$route.name!="Profile")
+        this.$router.push({name:"Profile", params:{userId:this.user._id}});
 			this.upadateUser();
 		},
 		goOffice(office) {

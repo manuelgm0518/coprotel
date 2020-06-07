@@ -4,7 +4,7 @@
 			<LoginError message="Inicia sesión para poder revisar tus rentas." class="vertical-middle" />
 		</div>
 		<div v-else>
-			<h1 class="my-3">Mis Oficinas Rentadas</h1>
+			<h1 class="my-3">Oficinas Rentadas</h1>
 			<b-overlay :show="!loaded" no-wrap class="mt-5 mt-md-0" />
 
 			<b-row>

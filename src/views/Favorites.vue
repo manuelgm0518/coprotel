@@ -7,14 +7,8 @@
 			<h1 class="my-3">Oficinas favoritas</h1>
 			<b-overlay :show="!loaded" no-wrap class="mt-5 mt-md-0" />
 			<b-row>
-				<b-col v-for="(office, i) in offices" v-bind:key="i" lg="4">
-					<b-card
-						class="w-100 my-2 border-0 shadow"
-						:img-src="$store.state.serverPath + '/file/' + offices[i].images[0]"
-					>
-						<h3>{{office.name}}</h3>
-						<b-button variant="success" @click="goOffice(office)">Ver más</b-button>
-					</b-card>
+				<b-col v-for="(office, i) in offices" v-bind:key="i" lg="3">
+          <OfficeCardSmall :officeModel="office"/>
 				</b-col>
 			</b-row>
 			<div style="height:75vh;" v-if="offices.length==0 && loaded">
@@ -26,8 +20,11 @@
 
 <script>
 import axios from 'axios';
-
+import OfficeCardSmall from '../components/OfficeCardSmall'
 export default {
+  components: {
+    OfficeCardSmall
+  },
 	data() {
 		return {
 			user: null,
