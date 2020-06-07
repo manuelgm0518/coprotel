@@ -110,17 +110,20 @@ export default {
             else{
                 this.office = res.data;
                 this.office.date = new Date(this.office.date).toLocaleDateString('es-MX', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-                if(this.office.owner == this.$store.state.user._id || this.$store.state.admin)
-                    this.editToggle = true;
-                this.favoriteToggle = this.searchFavorite();
-                this.acceptRequest = this.getAcceptRequest();
-                let userRequest = this.getUserRequest();
-                if(userRequest != null){
-                    if(userRequest.lessee._id == this.$store.state.user._id){
-                        this.code = userRequest.code;
-                        this.contactInfo = true;
+                if(this.$store.state.user){
+                    if(this.office.owner == this.$store.state.user._id || this.$store.state.admin)
+                        this.editToggle = true;
+                    this.favoriteToggle = this.searchFavorite();
+                    this.acceptRequest = this.getAcceptRequest();
+                    let userRequest = this.getUserRequest();
+                    if(userRequest != null){
+                        if(userRequest.lessee._id == this.$store.state.user._id){
+                            this.code = userRequest.code;
+                            this.contactInfo = true;
+                        }
                     }
                 }
+                this.acceptRequest = this.getAcceptRequest();
             }
         }).catch(err => {
             console.log(err);
