@@ -1,21 +1,20 @@
 <template>
-  <b-container fluid class="bg-light vh-100" style="padding-top:4rem">
-    <NavigationBar/>
-    <div class="vertical-middle text-center">
-      <h1>
-        Joaqín c la come desde las rentas
-      </h1>
-      <h3 class="d-block d-lg-none">en responsive xd</h3>
+  <b-container class="vh-100">
+      <div v-if="!user" style="height:80vh">
+      <LoginError message="Inicia sesión para poder revisar tus rentas." class="vertical-middle" />
+    </div>
+    <div v-else>
+      <h1>Mis Rentas</h1>
     </div>
   </b-container>
 </template>
 
 <script>
-import NavigationBar from '../components/NavigationBar'
+import LoginError from '../components/LoginError'
 export default {
   name: 'Rents',
   components: {
-    NavigationBar
+    LoginError
   }
 }
 </script>
