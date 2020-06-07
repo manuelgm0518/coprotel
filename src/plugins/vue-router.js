@@ -24,7 +24,7 @@ export default new VueRouter({
       name:'AdmReg',
       component: () => import('../views/AdmReg.vue')
     },{
-      path: '/search',
+      path: '/search/:filters?',
       name: 'Search',
       component: () => import('../views/Search.vue')
     },{
@@ -47,6 +47,10 @@ export default new VueRouter({
       path: '/office/:officeId?',
       name: 'Office',
       component: () => import('../views/Office.vue')
+    },{
+      path: '/users',
+      name: 'Users',
+      component: () => import('../views/Users.vue')
     }
   ]
 })
