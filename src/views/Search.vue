@@ -39,7 +39,7 @@
 								<option v-for="(state,i) in statesList" :key="i" :value="state._id">{{ state.name }}</option>
 							</b-form-select>
 
-							<b-form-select v-model="filters.municipality" :disabled="filters.state==''" size="sm">
+							<b-form-select v-model="filters.municipality" :disabled="!filters.state" size="sm">
 								<option
 									v-for="(municipality,j) in municipalitiesList"
 									:key="j"
