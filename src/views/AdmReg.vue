@@ -164,8 +164,9 @@ export default {
         resetModal() {
             this.admin.name.value = ''
             this.admin.name.state = null
-            this.admin.lastName.value = ''
-            this.admin.lastname.state = null
+            /*this.admin.lastName.value = ''
+            this.admin.lastname.state = null*/
+            this.admin.lastName = {value:'', state:null, verify:this.verifyText}
             this.admin.email.value = ''
             this.admin.email.state = null
             this.admin.password.value = ''
@@ -201,11 +202,10 @@ export default {
                 email:this.admin.email.value,
                 password:this.admin.password.value,
             }
-            axios.post(this.$store.state.serverPath + '/api/admin', data).then(reg => {
-                /////
-                //alert('Administrador registrado: ' + reg.data.name); //Falta fixear esto xd
-                this.$router.push('/login');
-                /////
+            axios.post(this.$store.state.serverPath + '/api/user/admin', data).then(reg => {
+                if(reg.status == 200){
+                    this.$router.push('/login');
+                }
             }).catch(err => {
                 console.log(err);
             });
