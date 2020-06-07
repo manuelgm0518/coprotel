@@ -80,20 +80,8 @@
     <div class="vertical-middle text-center">
     <br><br>
     </div>
-  </b-container>
-  <div  v-if="!user">
-    <b-container>
-      <br><br>
-    <h4>Inicia sesión para ver tu perfil</h4>
-    <b-button variant="success" @click="goLogin()">Inicia sesión</b-button>
-    <br><br>
-    <h4>¿Aún no tienes cuenta? ¡Regístrate aquí!</h4>
-    <b-button variant="success" @click="goRegister()">Regístrate</b-button>
-    </b-container>
-  </div>
-  <div v-else>
-  <b-container>
-    <div class="vertical-left text center">
+    <div v-else>
+      <div class="vertical-left text center">
       <br>
       <h2>Mi perfil</h2>
       <br>
@@ -145,19 +133,20 @@
       </div>
     </div>
     </div>
+    </div>
   </b-container>
   </div>
   </div>-->
 </template>
 
 <script>
-import NavigationBar from '../components/NavigationBar'
+import LoginError from '../components/LoginError'
 import axios from 'axios';
 
 export default {
   name: 'Profile',
   components: {
-    NavigationBar
+    LoginError
   },
   data(){
     return{

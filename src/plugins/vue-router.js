@@ -12,14 +12,6 @@ export default new VueRouter({
       name: 'Home',
       component: () => import('../views/Home.vue')
     }, {
-      path: '/login',
-      name: 'LogIn',
-      component: () => import('../views/LogIn.vue')
-    },{
-      path: '/register',
-      name:'Register',
-      component: () => import('../views/Register.vue')
-    },{
       path: '/AdmReg',
       name:'AdmReg',
       component: () => import('../views/AdmReg.vue')

@@ -1,5 +1,5 @@
 <template>
-	<b-container class="bg-light pb-5 pb-lg-2" style="padding-top:5rem; min-height:100vh">
+	<b-container class="bg-light">
 		<b-row no-gutters>
 			<b-col cols="12" lg="4" class="pr-lg-3 mt-lg-3">
 				<b-card class="border-0 shadow">
@@ -81,6 +81,10 @@
 			<b-col cols="12" lg="8">
 				<b-overlay :show="!loaded" no-wrap class="mt-5 mt-md-0" />
 				<OfficeCard v-for="office in offices" :key="office._id" :officeModel="office" />
+        <div style="height:75vh;" v-if="offices.length==0 && loaded">
+          <h3 class="text-center vertical-middle">No se encontraron resultados</h3>
+        </div>
+        
 			</b-col>
 		</b-row>
 	</b-container>

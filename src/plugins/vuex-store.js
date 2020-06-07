@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    serverPath:'http://localhost:3000',
+    serverPath:'http://187.233.202.155',
     user:null,
     filters: {},
   },

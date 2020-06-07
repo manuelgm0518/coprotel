@@ -36,6 +36,16 @@ app.use('/api/municipality', require('./routes/municipality'));
 app.use('/api/office', require('./routes/office'));
 app.use('/file', require('./routes/file'));
 
+app.use(express.static('/home/leonel/Desktop/coprotel/dist'));
+
+app.all("*", (_req, res) => {
+  try {
+    res.sendFile('/home/leonel/Desktop/coprotel/dist/index.html');
+  } catch (error) {
+    res.json({ success: false, message: "Something went wrong" });
+  }
+});
+
 
 app.listen(app.get('port'), function () {
   console.log('Server on port ' + app.get('port'));

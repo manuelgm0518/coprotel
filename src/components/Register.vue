@@ -1,14 +1,10 @@
 <template>
-    <div id=Register>
-
-        <h2>Regístrate</h2>
-
-        <b-button v-b-modal.modal-prevent-closing size="lg">Sign Up</b-button>
-
+    
         <b-modal
-            id="modal-prevent-closing"
+            :id="modalId"
             ref="modal"
-            title="Sign Up"
+            title="Registrarse"
+            scrollable
             @show="resetModal"
             @hidden="resetModal"
             @ok="handleOk"
@@ -224,13 +220,15 @@
             </b-select> 
             <b-button type="button" variant="primary" @click="register">Regístrate</b-button>
         </b-form>-->
-    </div>
 </template>
 
 <script>
 import axios from 'axios';
 
 export default { //ok
+props: {
+  modalId: String
+},
     data(){
         return {
             user:{
