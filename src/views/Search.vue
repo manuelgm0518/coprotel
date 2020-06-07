@@ -126,9 +126,9 @@ export default {
 			})
 			.catch(err => {
 				console.log(err);
-      });
-      this.filters = this.$store.state.filters;
-      
+			});
+		this.filters = this.$store.state.filters;
+
 		this.loaded = false;
 		axios
 			.get(this.$store.state.serverPath + "/api/office/")
@@ -139,11 +139,10 @@ export default {
 			.catch(err => {
 				console.log(err);
 			});
-  },
-  updated() {
-    if(this.filters.municipality)
-        this.updateMunicipalities();
-  },
+	},
+	updated() {
+		if (this.filters.municipality) this.updateMunicipalities();
+	},
 	methods: {
 		cleanFilter: function() {
 			this.filters.searchText = "";
@@ -155,8 +154,8 @@ export default {
 			this.filters.afterDate = "";
 		},
 		searchQuery: function() {
-	  	this.loaded = false;
-		console.log(this.filters)
+			this.loaded = false;
+			console.log(this.filters);
 			/*axios
 				.get(this.$store.state.serverPath + "/api/office/") //Query mamalón
 				.then(res => {
