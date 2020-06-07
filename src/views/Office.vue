@@ -4,13 +4,8 @@
         <b-card >
 
         <!-- Los datos no están en orden -->
-<<<<<<< HEAD
         
         <h1>{{office.name}}</h1>
-=======
-        <h1 class="mt-4">Oficina</h1>
-        <h2>{{office.name}}</h2>
->>>>>>> 37eebd549d4e401673080a7926487b61086e4faf
         <h3>Imagenes</h3>
         <img height="100px" v-for="(image, i) in office.images" v-bind:key="i" alt="Imagen de una oficina" :src="$store.state.serverPath + '/file/' + office.images[i]">
         <h3>Palabras claves</h3>
