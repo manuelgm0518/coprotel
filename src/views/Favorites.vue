@@ -1,9 +1,9 @@
 <template>
-<b-container class="vh-100">
-      <div v-if="!user" style="height:80vh">
-      <LoginError message="Inicia sesión para ver tus oficinas favoritas." class="vertical-middle" />
-    </div>
-    <div v-else>
+	<b-container class="vh-100">
+		<div v-if="!user" style="height:80vh">
+			<LoginError message="Inicia sesión para ver tus oficinas favoritas." class="vertical-middle" />
+		</div>
+		<div v-else>
       <h1 class="my-3">Oficinas favoritas</h1>
 			<b-overlay :show="!loaded" no-wrap class="mt-5 mt-md-0" />
 			<b-row>
@@ -19,20 +19,13 @@
 				<h3 class="text-center vertical-middle">No se encontraron resultados</h3>
 			</div>
     </div>
-  </b-container>
-	
+	</b-container>
 </template>
 
 <script>
-import axios from "axios";
-import LoginError from "../components/LoginError";
-//import OfficeCard from '../components/OfficeCard'
+import axios from 'axios';
+
 export default {
-	name: "Favorites",
-	components: {
-		LoginError
-		//OfficeCard
-	},
 	data() {
 		return {
 			user: null,
@@ -44,14 +37,14 @@ export default {
 		this.user = this.$store.state.user;
 		this.loaded = false;
 		if (this.user.admin) if (this.user.admin == true) this.user = null;
-		if (this.user != null)
+		if (this.user)
+			this.offices = [];
 			axios
 				.post(this.$store.state.serverPath + "/api/office/favorites", {
 					offices: this.user.favorites
 				})
 				.then(res => {
 					if (res.status == 200) this.offices = res.data;
-					//console.log(res.data);
 					this.clearOffices();
 					this.loaded = true;
 				})
@@ -61,6 +54,7 @@ export default {
 	},
 	methods: {
 		goOffice(office) {
+			office;
 			this.$router.push("/office/" + office._id);
 		},
 		clearOffices() {
@@ -68,8 +62,5 @@ export default {
 				this.offices.splice(this.offices.indexOf(null), 1);
 		}
 	}
-};
+}
 </script>
-
-<style>
-</style>
