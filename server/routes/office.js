@@ -57,6 +57,16 @@ router.get('/user/:id', (req, res) => {
     });
 });
 
+router.get('/rents/user/:id', (req, res) => {
+    office.find({"rents.lessee":req.params.id}, (err, data) => {
+        if(err)
+            res.status(400).json(err);
+        else
+            res.json(data);
+    });
+});
+
+
 router.post('/favorites', async (req, res) => {
     var send = [], err, data;
     for(var ofi of req.body.offices){

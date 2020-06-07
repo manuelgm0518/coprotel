@@ -41,6 +41,17 @@
         </div> <div v-else>
           <h4>No hay oficinas disponibles para mostrar</h4>
         </div>
+        <br><br>
+      <h2>Mis rentas</h2>
+       <div v-if="rents">
+      <b-card v-for="(rent, i) in rents" v-bind:key="i">
+        <h3>{{rent.name}}</h3>
+        <img :src="$store.state.serverPath + '/file/' + rents[i].images[0]">
+        <b-button variant="success" @click="goOffice(rent)">Ver más</b-button>
+         </b-card>
+        </div> <div v-else>
+          <h4>No estás rentando ninguna oficina actualmente</h4>
+        </div>
       </div>
     </div>
   </b-container>
@@ -67,7 +78,8 @@ export default {
         location:{name:'', state:{name:''}},
         image:''
       },
-      offices:[]
+      offices:[],
+      rents:[]
     }
   },
   mounted(){
@@ -78,7 +90,14 @@ export default {
     }).catch(err => {
       console.log(err);
     });
+    axios.get(this.$store.state.serverPath + '/api/office/rents/user/' + this.user._id).then(res => {
+      console.log(res.data);
+      this.rents = res.data;
+    }).catch(err => {
+      console.log(err);
+    });
   },
+
   methods:{
       changePfp(){
         var formData = new FormData();
