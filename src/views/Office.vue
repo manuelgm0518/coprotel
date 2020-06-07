@@ -1,5 +1,8 @@
 <template>
     <div id="Office">
+
+        <b-card style="max-width: 60rem;" class=".card">
+
         <!-- Los datos no están en orden -->
         <h1 style="margin-top: 100px;">Oficina</h1>
         <h2>{{office.name}}</h2>
@@ -70,6 +73,7 @@
             <p><strong>Aquí van las consideraciones antes de rentar la oficina</strong></p>
             <b-button variant="primary" @click="requestRent">Rentar</b-button>
             <b-button @click="rentToggle = false">Cancelar</b-button>
+        </b-card>
         </b-card>
     </div>
 </template>
@@ -254,5 +258,9 @@ export default {
 </script>
 
 <style scoped>
-
+.card {
+        margin: 0 auto; /* Added */
+        float: none; /* Added */
+        margin-bottom: 10px; /* Added */
+}
 </style>

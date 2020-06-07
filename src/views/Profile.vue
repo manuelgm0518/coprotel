@@ -1,5 +1,19 @@
 <template>
-<div>
+<div >
+     
+    <!--<div>
+      <b-card style="max-width: 60rem;" class=".card mt-4" deck>
+        <div class="mt-4">
+          <h1>Mi perfil</h1>
+          <b-card img-src="https://placekitten.com/300/300" img-alt="Card image" img-left class="mb-3">
+            <b-card-text>
+              Some quick example text to build on the card and make up the bulk of the card's content.
+            </b-card-text>
+          </b-card>
+        </div>
+      </b-card>
+    </div>-->
+
   <b-container fluid class="bg-light vh-10" style="padding-top:4rem">
     <NavigationBar/>
     <div class="vertical-middle text-center">
@@ -161,6 +175,10 @@ export default {
 </script>
 
 <style>
- 
+.card {
+    margin: 0 auto; /* Added */
+    float: none; /* Added */
+    margin-bottom: 10px; /* Added */
+}
 </style>
     
