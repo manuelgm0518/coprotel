@@ -155,7 +155,6 @@ export default {
 		},
 		searchQuery: function() {
 		this.loaded = false;
-		console.log(this.filters) /////////////
 			axios
 				.post(this.$store.state.serverPath + "/api/office/search", this.filters) //Query mamalón
 				.then(res => {
