@@ -52,6 +52,7 @@
         </div> <div v-else>
           <h4>No estás rentando ninguna oficina actualmente</h4>
         </div>
+        <br><br>
       </div>
     </div>
   </b-container>
