@@ -1,6 +1,13 @@
 <template>
+<div>
+  <b-container fluid class="bg-light vh-10" style="padding-top:4rem">
+    <NavigationBar/>
+    <div class="vertical-middle text-center">
+    <br><br>
+    </div>
+  </b-container>
   <div  v-if="!user">
-    <b-container fluid class="bg-light vh-10" style="padding-top:4rem">
+    <b-container>
       <br><br>
     <h4>Inicia sesión para ver tu perfil</h4>
     <b-button variant="success" @click="goLogin()">Inicia sesión</b-button>
@@ -10,12 +17,6 @@
     </b-container>
   </div>
   <div v-else>
-  <b-container fluid class="bg-light vh-10" style="padding-top:4rem">
-    <NavigationBar/>
-    <div class="vertical-middle text-center">
-    <br><br>
-    </div>
-  </b-container>
   <b-container>
     <div class="vertical-left text center">
       <br>
@@ -25,6 +26,7 @@
         <h5>Nombre: {{user.name}}</h5>
         <h5>Apellido: {{user.lastName}}</h5>
         <h5>Correo electrónico: {{user.email}}</h5>
+        <div v-if="user.location">
         <h5>Estado: {{user.location.state.name}}</h5>
         <h5>Municipio: {{user.location.name}}</h5>
         <img :src="$store.state.serverPath + '/file/' + user.image">
@@ -39,7 +41,9 @@
             <b-button variant="primary" @click="mostrar = !mostrar, changePfp()">Editar</b-button>
         </template>
         <br>
+      </div>
       <b-button variant="danger" @click="logOut">Cerrar sesión</b-button>
+      <div v-if="user.location">
       <h2>Mis oficinas</h2>
       <b-button variant="warning" @click="$router.push('/addoffice')">Agregar una oficina</b-button>
        <div v-if="offices">
@@ -62,10 +66,12 @@
         </div> <div v-else>
           <h4>No estás rentando ninguna oficina actualmente</h4>
         </div>
-        <br><br>
+        <br><br>      
       </div>
     </div>
+    </div>
   </b-container>
+  </div>
   </div>
 </template>
 
