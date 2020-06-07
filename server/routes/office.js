@@ -57,6 +57,20 @@ router.get('/user/:id', (req, res) => {
     });
 });
 
+router.post('/favorites', async (req, res) => {
+    var send = [], err, data;
+    for(var ofi of req.body.offices){
+        err, data = await office.findOne({_id:ofi});
+        if(err)
+            break;
+        send.push(data);
+    }
+    if(err)
+        res.status(400).json(err);
+    else
+        res.json(send);
+});
+
 router.get('/:id', (req, res) => {
     office.findOne({_id:req.params.id}).populate({path:'location', populate:{path:'state'}}).exec((err, data) => {
         if(err)

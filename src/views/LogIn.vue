@@ -116,7 +116,8 @@ export default {
                     }
                     else {
                         localStorage.setItem('token', res.data);
-                        this.$router.go();
+                        this.upadateUser();
+                        this.$router.push('/');
                     }
                 }).catch(err => {
                     console.log(err);
@@ -125,7 +126,25 @@ export default {
                 this.$nextTick(() => {
                     this.$bvModal.hide('modal-prevent-closing')
                 })
+            },
+        upadateUser(){
+            if(localStorage.getItem('token')){
+            axios.get(this.$store.state.serverPath + '/api/user/logIn/verify/' + localStorage.getItem('token')).then(res => {
+                if(res.data.unauthorized){
+                    localStorage.clear();
+                    this.$store.state.user = null;
+                } else {
+                    this.$store.state.user = res.data;
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+            } else {
+                this.$store.state.user = null;
+                localStorage.clear();
             }
+            //this.user = this.$store.state.user;
+        }
     }
 }
 </script>
