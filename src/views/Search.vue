@@ -5,27 +5,12 @@
 
       <b-col cols="12" lg="4" class="pr-lg-3">
         <b-card>
-          ola
+          {{ this.offices }}
         </b-card>
       </b-col>
 
       <b-col cols="12" lg="8">
-        <b-row>
-          <b-col>
-            <OfficeCardSmall/>
-          </b-col>
-          <b-col>
-            <OfficeCardSmall/>
-          </b-col>
-          <b-col>
-            <OfficeCardSmall/>
-          </b-col>
-          
-        </b-row>
-        
-        <OfficeCard/>
-        <OfficeCard/>
-        <OfficeCard/>
+        <OfficeCard v-for="office in offices" :key="office._id" :officeModel="office"/>
       </b-col>
     </b-row>
         
@@ -35,12 +20,28 @@
 
 <script>
 import OfficeCard from '../components/OfficeCard'
-import OfficeCardSmall from'../components/OfficeCardSmall'
+//import OfficeCardSmall from'../components/OfficeCardSmall'
+import axios from 'axios'
 export default {
   name: 'Search',
+  data: () => ({
+    offices: []
+  }),
   components: {
-    OfficeCardSmall,
+    //OfficeCardSmall,
     OfficeCard
+  },
+  mounted() {
+    axios.get(this.$store.state.serverPath + '/api/office/').then(res => {
+      console.log(res.data);
+      
+      this.offices = res.data;
+      //this.images = res.images;
+
+
+    }).catch(err => {
+      console.log(err);
+    });
   }
 }
 </script>

@@ -6,7 +6,7 @@ const app = express();
 
 //Settings
 app.set('port', process.env.PORT || 3000);
-mongoose.connect('mongodb+srv://adminxd:adminxd@coprotel-skxxg.mongodb.net/coprotel?retryWrites=true&w=majority');
+mongoose.connect('mongodb+srv://adminxd:adminxd@coprotel-skxxg.mongodb.net/coprotel?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error: '));
 db.once('open', () => {
@@ -14,7 +14,7 @@ db.once('open', () => {
 })
 
 //Middlewares
-function logger(req, res, next){
+function logger(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
@@ -38,5 +38,5 @@ app.use('/file', require('./routes/file'));
 
 
 app.listen(app.get('port'), function () {
-  console.log('Server on port '+ app.get('port'));
+  console.log('Server on port ' + app.get('port'));
 });
