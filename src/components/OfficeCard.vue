@@ -49,8 +49,7 @@
 					<b-col>
 						<div class="vertical-middle">
 							<span class="material-icons-round align-bottom mr-1">aspect_ratio</span>
-							{{ officeModel.area }}m
-							<sup>2</sup>
+							{{ officeModel.area }}m<sup>2</sup>
 						</div>
 					</b-col>
 					<b-col>
