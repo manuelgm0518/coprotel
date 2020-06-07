@@ -54,8 +54,9 @@
 							<h4>No hay oficinas disponibles para mostrar</h4>
 						</div>
 					</div>
+          <b-button variant="warning" @click="$router.push('/addoffice')">Agregar una oficina</b-button>
 				</b-card>
-			</div>
+      </div>
 			<div>
 				<b-card style="max-width: 60rem;" class=".card mt-4" deck>
 					<div class="mt-4">
