@@ -1,18 +1,21 @@
 <template>
-  <div id="app" class="bg-light">
+  <div id="app" class="bg-light pb-lg-0" style="padding:4.5rem 0;">
     <NavigationBar/>
     <router-view v-if="show"/>
+    <Footer/>
   </div>
 </template>
 
 <script>
 import NavigationBar from './components/NavigationBar.vue';
+import Footer from './components/Footer'
 import axios from 'axios';
 
 export default {
   name:'app',
   components: {
-    NavigationBar
+    NavigationBar,
+    Footer
   },
   data(){
     return {

@@ -1,5 +1,14 @@
 <template>
-	<b-card no-body class="overflow-hidden border-0 shadow my-3 p-0 office-card" @click.stop="gotoOffice">
+	<b-card
+		no-body
+		class="overflow-hidden border-0 shadow my-3 p-0 office-card"
+		@click.stop="gotoOffice"
+	>
+
+  <b-modal id="login-error-modal">
+    <LoginError message="Para poder agregar a favoritos necesitas iniciar sesión"/>
+  </b-modal>
+
 		<b-row no-gutters>
 			<b-col md="5">
 				<b-carousel controls>
@@ -8,7 +17,7 @@
 							<b-aspect
 								aspect="16:9"
 								class="bg-secondary img-cover"
-								v-bind:style="{ backgroundImage: 'url(' + $store.state.serverPath + '/file/'+ image + ')' }"
+								:style="{ backgroundImage: 'url(' + $store.state.serverPath + '/file/'+ image + ')' }"
 							></b-aspect>
 						</template>
 					</b-carousel-slide>
@@ -49,7 +58,8 @@
 					<b-col>
 						<div class="vertical-middle">
 							<span class="material-icons-round align-bottom mr-1">aspect_ratio</span>
-							{{ officeModel.area }}m<sup>2</sup>
+							{{ officeModel.area }}m
+							<sup>2</sup>
 						</div>
 					</b-col>
 					<b-col>
@@ -66,7 +76,11 @@
 
 <script>
 import axios from "axios";
+import LoginError from '../components/LoginError'
 export default {
+  components: {
+LoginError
+  },
 	props: {
 		officeModel: Object
 	},
@@ -98,7 +112,13 @@ export default {
 		},
 		updateFav: function() {
 			if (this.$store.state.user == null) {
-				alert("Debe iniciar sesión para poder añadir a favoritos"); //Falta ponerlo más bonito
+        this.$bvToast.toast('Para agregar a favoritos necesitas iniciar sesión', {
+          title: "¡Inicia sesión!",
+          variant: "danger",
+          toaster:'b-toaster-top-center',
+          solid: true
+        })
+				//alert("Debe iniciar sesión para poder añadir a favoritos"); //Falta ponerlo más bonito
 			} else if (this.favorite) {
 				axios
 					.post(this.$store.state.serverPath + "/api/user/favorite/quit", {
@@ -107,48 +127,55 @@ export default {
 					})
 					.then(res => {
 						if (res.status == 200) {
-              this.favorite = false;
-              this.upadateUser();
+							this.favorite = false;
+							this.upadateUser();
 						}
 					})
 					.catch(err => {
 						console.log(err);
 					});
-			}else{
-        axios
+			} else {
+				axios
 					.post(this.$store.state.serverPath + "/api/user/favorite/add", {
 						user: this.$store.state.user._id,
 						office: this.officeModel._id
 					})
 					.then(res => {
 						if (res.status == 200) {
-              this.favorite = true;
-              this.upadateUser();
+							this.favorite = true;
+							this.upadateUser();
 						}
 					})
 					.catch(err => {
 						console.log(err);
 					});
-      }
-    },
-    upadateUser(){
-            if(localStorage.getItem('token')){
-            axios.get(this.$store.state.serverPath + '/api/user/logIn/verify/' + localStorage.getItem('token')).then(res => {
-                if(res.data.unauthorized){
-                    localStorage.clear();
-                    this.$store.state.user = null;
-                } else {
-                    this.$store.state.user = res.data;
-                }
-            }).catch(err => {
-                console.log(err);
-            });
-            } else {
-                this.$store.state.user = null;
-                localStorage.clear();
-            }
-            this.user = this.$store.state.user;
-        },
+			}
+		},
+		upadateUser() {
+			if (localStorage.getItem("token")) {
+				axios
+					.get(
+						this.$store.state.serverPath +
+							"/api/user/logIn/verify/" +
+							localStorage.getItem("token")
+					)
+					.then(res => {
+						if (res.data.unauthorized) {
+							localStorage.clear();
+							this.$store.state.user = null;
+						} else {
+							this.$store.state.user = res.data;
+						}
+					})
+					.catch(err => {
+						console.log(err);
+					});
+			} else {
+				this.$store.state.user = null;
+				localStorage.clear();
+			}
+			this.user = this.$store.state.user;
+		}
 	}
 };
 </script>
