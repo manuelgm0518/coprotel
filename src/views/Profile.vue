@@ -4,7 +4,6 @@
 			<LoginError message="Inicia sesión para poder revisar tu perfil." class="vertical-middle" />
 		</div>
 		<div v-else>
-			
 			<b-overlay :show="!loaded" no-wrap class="mt-5 mt-md-0" />
 			<b-card style="max-width: 60rem;" class=".card mt-4" deck>
 				<div class="mt-4">
