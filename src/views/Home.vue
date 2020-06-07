@@ -1,34 +1,61 @@
 <template>
-	<div class=" py-3">
-		<b-container class="bg-light">
-			<b-carousel controls class="w-100">
-				<b-carousel-slide v-for="office in offices" :key="office._id">
+<b-container class="bg-light mt-lg-3">
+<b-overlay :show="!loaded" no-wrap/>
+
+  <b-carousel controls class="w-100">
+				<b-carousel-slide v-for="(jumbo,i) in jumbotronInfo" :key="i">
 					<template slot="img">
 						<b-container>
-							<b-jumbotron header="BootstrapVue" class="bg-dark p5" lead="Bootstrap v4 Components for Vue.js 2">
-								<p>For more information visit website</p>
-								<b-button variant="primary" href="#">More Info</b-button>
+							<b-jumbotron :header="jumbo.title" :lead="jumbo.subtitle" class="bg-dark truncate" >
+								<p>{{jumbo.text}}</p>
 							</b-jumbotron>
 						</b-container>
 					</template>
 				</b-carousel-slide>
 			</b-carousel>
-		</b-container>
-	</div>
+
+      <h1 class="py-2">Últimas Novedades</h1>
+			<b-row cols="2" cols-md="4">
+        <b-col v-for="office in offices" :key="office._id">
+          <OfficeCardSmall :officeModel="office"/>
+        </b-col>
+      </b-row>
+
+      <div class="dropdown-divider my-3 border"></div>
+
+      <b-row cols="1" cols-md="2" class="text-center">
+        <b-col>
+          <h1>Título</h1><p>Información</p>
+        </b-col>
+        <b-col>
+          <h1>Título</h1><p>Información</p>
+        </b-col>
+      </b-row>
+
+
+</b-container>
+
+	
 </template>
 
 <script>
-//import OfficeCardSmall from '../components/OfficeCardSmall'
+import OfficeCardSmall from '../components/OfficeCardSmall'
 import axios from "axios";
 export default {
 	components: {
-		//OfficeCardSmall
+		OfficeCardSmall
 	},
 	data: () => ({
 		offices: [],
-		loaded: false
+    loaded: false,
+    jumbotronInfo: [
+      { image: "../resources/carousel-1.jpg", title:"Título 1", subtitle:"Subtítulo 1", text:"Texto 1"},
+      { image: "../resources/carousel-2.jpg", title:"Título 1", subtitle:"Subtítulo 1", text:"Texto 2"},
+      { image: "../resources/carousel-3.jpg", title:"Título 1", subtitle:"Subtítulo 1", text:"Texto 3"}
+    ]
 	}),
 	mounted() {
+    this.loaded = false;
 		axios
 			.get(this.$store.state.serverPath + "/api/office/")
 			.then(res => {
