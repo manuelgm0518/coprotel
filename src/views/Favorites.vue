@@ -34,6 +34,7 @@ export default {
       axios.post(this.$store.state.serverPath + '/api/office/favorites', {offices:this.user.favorites}).then(res => {
         if(res.status == 200)
           this.offices = res.data;
+          this.clearOffices();
       }).catch(err => {
         console.log(err);
       });
@@ -41,6 +42,10 @@ export default {
   methods:{
     goOffice(office){
       this.$router.push('/office/' + office._id);
+    },
+    clearOffices(){
+      while(this.offices.indexOf(null) != -1)
+        this.offices.splice(this.offices.indexOf(null), 1);
     }
   }
 }

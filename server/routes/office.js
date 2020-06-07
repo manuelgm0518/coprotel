@@ -54,7 +54,19 @@ router.post('/request/add', (req, res) => {
 });
 
 router.post('/request/accept', (req, res) => {
-    office.updateOne({_id:req.body.office, 'rents.requestDate':req.body.office},{$set:{startDate:Date.now()}}, (err, data) => {
+    let r = Math.random().toString(36).substring(7);
+    office.updateOne({_id:req.body.office, 'rents.lessee':req.body.user, 'rents.requestDate':req.body.date}, {$set:{rents:{'startDate':Date.now(), 'lessee':req.body.user, 'requestDate':req.body.date, 'code':r}}}, (err, data) => {
+        if(err){
+            console.log(err);
+            res.status(400).json(err);
+        }
+        else
+            res.json(data);
+    });
+});
+
+router.post('/request/close', (req, res) => {
+    office.updateOne({_id:req.body.office, 'rents.lessee':req.body.user, 'rents.requestDate':req.body.date}, {$set:{rents:{'endDate':Date.now(), 'lessee':req.body.user, 'requestDate':req.body.date, 'startDate':req.body.start}}}, (err, data) => {
         if(err){
             console.log(err);
             res.status(400).json(err);

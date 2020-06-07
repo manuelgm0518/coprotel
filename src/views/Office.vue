@@ -19,10 +19,24 @@
         <p><i>Fecha de registro: </i>{{office.date}}</p>
         <h3>Precio de renta</h3>
         <p><i>Precio: </i>{{office.rentAmount}}</p>
-        <b-button variant="danger" @click="rentRequestShow">Rentar</b-button>
+        
+        <div v-if="!editToggle">
+            <b-button variant="danger" @click="rentRequestShow" v-if="acceptRequest">Rentar</b-button>
+            <i v-else style="color:red">Esta oficina ya se encuentra rentada</i>
+        </div>
+            
+        
         <h3>Marcar como favorito</h3>
         <b-button variant="warning" @click="addFavorite" v-if="!favoriteToggle">Añadir a favoritos</b-button>
         <b-button variant="warning" @click="quitFavorite" v-if="favoriteToggle">Quitar de favoritos</b-button>
+
+        <div v-if="contactInfo">
+            <h3>Información de contacto</h3>
+            <b-card>
+                <span v-html="office.contact"></span>
+            </b-card>
+            <p><i>Código de registro: </i>{{code}}</p>
+        </div>
 
         <!-- Dueño y admin -->
         <div id="edit" v-if="editToggle">
@@ -37,12 +51,15 @@
                     <p><i>Fecha de solicitud: </i>{{getTime(rent.requestDate)}}</p>
                     <p><i>Fecha de alojamiento: </i> {{getTime(rent.startDate)}}</p>
                     <p><i>Fecha de desalojamiento: </i> {{getTime(rent.endDate)}}</p>
-                    <div class="requestAccept" v-if="acceptRequest">
-                        <b-button variant="success" @click="sendAcceptRequest(rent.lessee)">Aceptar solicitud</b-button>
-                        <b-button>Eliminar solicitud</b-button>
-                    </div>
-                    <div class="requestEnd" v-if="rent.startDate != null && rent.endDate == null">
-                        <b-button variant="danger">Cerrar solicitud</b-button>
+                    <p><i>Código de registro: </i>{{rent.code}}</p>
+                    <div class="optionsRequest" v-if="rent.startDate == null || rent.endDate == null">
+                        <div class="requestAccept" v-if="acceptRequest">
+                            <b-button variant="success" @click="sendAcceptRequest(rent)">Aceptar solicitud</b-button>
+                            <b-button variant="secondary">Eliminar solicitud</b-button>
+                        </div>
+                        <div class="requestEnd" v-if="rent.startDate != null && rent.endDate == null">
+                            <b-button variant="danger" @click="sendCloseRequest(rent)">Cerrar solicitud</b-button>
+                        </div>
                     </div>
                 </b-card>
             </b-card-group>
@@ -77,7 +94,9 @@ export default {
             editToggle:false,
             favoriteToggle:false,
             rentToggle:false,
-            acceptRequest:false
+            acceptRequest:false,
+            contactInfo:false,
+            code:''
         }
     },
     mounted(){
@@ -91,6 +110,13 @@ export default {
                     this.editToggle = true;
                 this.favoriteToggle = this.searchFavorite();
                 this.acceptRequest = this.getAcceptRequest();
+                let userRequest = this.getUserRequest();
+                if(userRequest != null){
+                    if(userRequest.lessee._id == this.$store.state.user._id){
+                        this.code = userRequest.code;
+                        this.contactInfo = true;
+                    }
+                }
             }
         }).catch(err => {
             console.log(err);
@@ -193,13 +219,31 @@ export default {
         getAcceptRequest(){
             var band = true;
             for(var rent of this.office.rents){
-                if(rent.starDate != null && rent.endDate == null)
+                if(rent.startDate != null && rent.endDate == null){
                     band = false;
+                }
+            }
+            return band;
+        },
+        getUserRequest(){
+            var band = null;
+            for(var rent of this.office.rents){
+                if(rent.startDate != null && rent.endDate == null){
+                    band = rent;
+                }
             }
             return band;
         },
         sendAcceptRequest(user){
-            axios.post(this.$store.state.serverPath + '/api/office/request/accept', {user:user._id,date:user.requestDate, office:this.$route.params.officeId}).then(res => {
+            axios.post(this.$store.state.serverPath + '/api/office/request/accept', {user:user.lessee._id,date:user.requestDate, office:this.$route.params.officeId}).then(res => {
+                if(res.status == 200)
+                    this.acceptRequest = false;
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        sendCloseRequest(user){
+            axios.post(this.$store.state.serverPath + '/api/office/request/close', {user:user.lessee._id,date:user.requestDate,office:this.$route.params.officeId,start:user.startDate}).then(res => {
                 console.log(res);
             }).catch(err => {
                 console.log(err);
