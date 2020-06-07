@@ -155,17 +155,17 @@ export default {
 			this.filters.afterDate = "";
 		},
 		searchQuery: function() {
-	  	this.loaded = false;
-		console.log(this.filters)
-			/*axios
-				.get(this.$store.state.serverPath + "/api/office/") //Query mamalón
+		this.loaded = false;
+		console.log(this.filters) /////////////
+			axios
+				.post(this.$store.state.serverPath + "/api/office/search", this.filters) //Query mamalón
 				.then(res => {
 					this.offices = res.data;
 					this.loaded = true;
 				})
 				.catch(err => {
 					console.log(err);
-				});*/
+				});
 		},
 		updateMunicipalities: function() {
 			axios

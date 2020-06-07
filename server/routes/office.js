@@ -29,7 +29,8 @@ router.post('/search', (req, res) => {
             {name:{'$regex':req.body.searchText, '$options':'i'}},
             {keywords:{'$in':req.body.searchText}},
             {rentAmount:{'$gte':req.body.minPrice, '$lte':req.body.maxPrice}},
-            {date:{'$gte':req.body.afterDate}}
+            {date:{'$gte':req.body.afterDate}},
+            {location:req.body.municipality}
         ]
     }).populate({path:'location', populate:{path:'state'}}).exec((err, data) => {
         if(err){
