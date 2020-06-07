@@ -47,7 +47,7 @@ router.post('/search', (req, res) => {
 router.post('/favorites', async (req, res) => {
     var send = [], err, data;
     for(var ofi of req.body.offices){
-        err, data = await office.findOne({_id:ofi});
+        err, data = await office.findOne({_id:ofi}).populate({path:'location', populate:{path:'state'}}).exec();
         if(err)
             break;
         send.push(data);
@@ -118,7 +118,7 @@ router.post('/image/:id', (req, res) => {
 });
 
 router.get('/user/:id', (req, res) => {
-    office.find({owner:req.params.id}, (err, data) => {
+    office.find({owner:req.params.id}).populate({path:'location', populate:{path:'state'}}).exec((err, data) => {
         if(err)
             res.status(400).json(err);
         else
@@ -127,7 +127,7 @@ router.get('/user/:id', (req, res) => {
 });
 
 router.get('/rents/user/:id', (req, res) => {
-    office.find({"rents.lessee":req.params.id}, (err, data) => {
+    office.find({"rents.lessee":req.params.id}).populate({path:'location', populate:{path:'state'}}).exec((err, data) => {
         if(err)
             res.status(400).json(err);
         else
