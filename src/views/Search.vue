@@ -155,7 +155,8 @@ export default {
 			this.filters.afterDate = "";
 		},
 		searchQuery: function() {
-      this.loaded = false;
+	  	this.loaded = false;
+		console.log(this.filters)
 			/*axios
 				.get(this.$store.state.serverPath + "/api/office/") //Query mamalón
 				.then(res => {
