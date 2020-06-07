@@ -24,6 +24,8 @@ router.get('/', (req, res) => {
 router.post('/search', (req, res) => {
     if(!req.body.searchText)
         req.body.searchText = '#';
+    if(!req.body.municipality.match(/^[0-9a-fA-F]{24}$/))
+        req.body.municipality = null
     office.find({
         '$or':[
             {name:{'$regex':req.body.searchText, '$options':'i'}},
