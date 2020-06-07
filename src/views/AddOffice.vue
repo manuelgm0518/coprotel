@@ -1,9 +1,9 @@
 <template>
-    <div id="AddOffice" style="margin: 10px">
+    <b-container id="AddOffice" class=" my-4" >
 
-        <b-card style="max-width: 60rem;" class=".card">
+        <b-card class="border-0 shadow">
 
-        <h1 style="margin-top: 100px;">Agregar una oficina</h1>
+        <h1>Agregar una oficina</h1>
 
         <b-form> <!--Los inputs no están en orden-->
 
@@ -270,7 +270,7 @@
             <b-button class="btn btn-primary btn-lg" style="float:right;" type="button" variant="warning" @click="add">Agregar</b-button>
         </b-form>
         </b-card>
-    </div>
+    </b-container>
 </template>
 
 <script>
