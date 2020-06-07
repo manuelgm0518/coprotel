@@ -1,21 +1,47 @@
 <template>
-  <b-container fluid class="bg-light vh-100" style="padding-top:4rem">
-    <NavigationBar/>
-    <div class="vertical-middle text-center">
-      <h1>
-        Joaqín c la come desde los Favoritos
-      </h1>
-      <h3 class="d-block d-lg-none">en responsive xd</h3>
+  <div id="Favorites">
+    <h1 v-if="user == null" style="text-align:center; margin-top: 200px">
+      Debe iniciar sesión para ver sus oficinas favoritas.<br>
+      Saludos del equipo de Rookie Rooters.
+    </h1>
+    <div v-else id="offices">
+      <h1 style="margin-top: 100px">Oficinas favoritas</h1>
+      <b-card v-for="(office, i) in offices" v-bind:key="i">
+        <h3>{{office.name}}</h3>
+        <img :src="$store.state.serverPath + '/file/' + offices[i].images[0]">
+        <b-button variant="success" @click="goOffice(office)">Ver más</b-button>
+      </b-card>
     </div>
-  </b-container>
+  </div>
 </template>
 
 <script>
-import NavigationBar from '../components/NavigationBar'
+import axios from 'axios';
+
 export default {
   name: 'Favorites',
-  components: {
-    NavigationBar
+  data(){
+    return {
+      user:null,
+      offices:[]
+    }
+  },
+  mounted(){
+    this.user = this.$store.state.user;
+    if(this.user.admin == true)
+      this.user = null;
+    if(this.user != null)
+      axios.post(this.$store.state.serverPath + '/api/office/favorites', {offices:this.user.favorites}).then(res => {
+        if(res.status == 200)
+          this.offices = res.data;
+      }).catch(err => {
+        console.log(err);
+      });
+  },
+  methods:{
+    goOffice(office){
+      this.$router.push('/office/' + office._id);
+    }
   }
 }
 </script>

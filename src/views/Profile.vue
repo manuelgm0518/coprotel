@@ -32,16 +32,15 @@
       <b-button variant="danger" @click="logOut">Cerrar sesión</b-button>
       <h2>Mis oficinas</h2>
       <b-button variant="warning" @click="$router.push('/addoffice')">Agregar una oficina</b-button>
+       <div v-if="offices">
       <b-card v-for="(office, i) in offices" v-bind:key="i">
         <h3>{{office.name}}</h3>
         <img :src="$store.state.serverPath + '/file/' + offices[i].images[0]">
         <b-button variant="success" @click="goOffice(office)">Ver más</b-button>
-        
-        <!-- <b-link src='/office/' + offices[i]._id>
-        <h3>{{offices[i].name}}</h3>
-         
-        </b-link> -->
-      </b-card>
+         </b-card>
+        </div> <div v-else>
+          <h4>No hay oficinas disponibles para mostrar</h4>
+        </div>
       </div>
     </div>
   </b-container>
@@ -83,20 +82,39 @@ export default {
   methods:{
       changePfp(){
         var formData = new FormData();
-          formData.append('image', this.tempimg);
-          axios.post(this.$store.state.serverPath + '/api/user/image/' + this.user._id, formData, { headers: {'Content-Type': 'multipart/form-data'}})
-          alert('aah'); //Falta poner la página de regreso
-          this.$router.push('/');
+        formData.append('image', this.tempimg);
+        axios.post(this.$store.state.serverPath + '/api/user/image/' + this.user._id, formData, { headers: {'Content-Type': 'multipart/form-data'}})
+        alert('aah'); //Falta poner la página de regreso
+        this.$router.push('/');
+        this.upadateUser();
       },
       goOffice(office){
         this.$router.push('/office/' + office._id);
       },
       logOut(){
         localStorage.clear();
-        this.$router.go();
-      }
+        this.upadateUser();
+        this.$router.push('/');
+      },
+      upadateUser(){
+        if(localStorage.getItem('token')){
+          axios.get(this.$store.state.serverPath + '/api/user/logIn/verify/' + localStorage.getItem('token')).then(res => {
+            if(res.data.unauthorized){
+              localStorage.clear();
+              this.$store.state.user = null;
+            } else {
+              this.$store.state.user = res.data;
+            }
+          }).catch(err => {
+            console.log(err);
+          });
+        } else {
+          this.$store.state.user = null;
+          localStorage.clear();
+        }
+        this.user = this.$store.state.user;
+    }
   }
-  
 }
 </script>
 

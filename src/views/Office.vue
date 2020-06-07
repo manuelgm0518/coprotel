@@ -91,8 +91,10 @@ export default {
                 alert('Debe iniciar sesión para poder añadir a favoritos'); //Falta ponerlo más bonito
             } else {
                 axios.post(this.$store.state.serverPath + '/api/user/favorite/add', {user:this.$store.state.user._id, office:this.$route.params.officeId}).then(res => {
-                    if(res.status == 200)
+                    if(res.status == 200){
                         this.favoriteToggle = true;
+                        this.upadateUser();
+                    }
                 }).catch(err => {
                     console.log(err);
                 });
@@ -103,8 +105,10 @@ export default {
                 alert('Debe iniciar sesión para poder añadir a favoritos'); //Falta ponerlo más bonito
             } else {
                 axios.post(this.$store.state.serverPath + '/api/user/favorite/quit', {user:this.$store.state.user._id, office:this.$route.params.officeId}).then(res => {
-                    if(res.status == 200)
+                    if(res.status == 200){
                         this.favoriteToggle = false;
+                        this.upadateUser();
+                    }
                 }).catch(err => {
                     console.log(err);
                 });
@@ -119,6 +123,24 @@ export default {
             }).catch(err => {
                 console.log(err);
             });
+        },
+        upadateUser(){
+            if(localStorage.getItem('token')){
+            axios.get(this.$store.state.serverPath + '/api/user/logIn/verify/' + localStorage.getItem('token')).then(res => {
+                if(res.data.unauthorized){
+                    localStorage.clear();
+                    this.$store.state.user = null;
+                } else {
+                    this.$store.state.user = res.data;
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+            } else {
+                this.$store.state.user = null;
+                localStorage.clear();
+            }
+            this.user = this.$store.state.user;
         }
     }
 }
