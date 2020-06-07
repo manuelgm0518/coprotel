@@ -1,5 +1,5 @@
 <template>
-	<b-container class="bg-light">
+	<b-container class="bg-light mb-lg-5 mb-3">
 		<b-row no-gutters>
 			<b-col cols="12" lg="4" class="pr-lg-3 mt-lg-3">
 				<b-card class="border-0 shadow">

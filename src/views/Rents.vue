@@ -14,6 +14,9 @@
 import LoginError from '../components/LoginError'
 export default {
   name: 'Rents',
+  data: () => ({
+    loaded: false
+  }),
   components: {
     LoginError
   }

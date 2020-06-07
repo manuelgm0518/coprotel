@@ -1,6 +1,6 @@
 <template>
 	<b-card class="border-0 shadow overflow-hidden office-card" no-body>
-		<div class="text-white bg-primary rounded-top p-2">
+		<div class="text-white bg-primary rounded-top p-2 truncate">
 			<span class="material-icons-round align-bottom text-white mr-1">location_on</span>
 			{{ officeModel.location.state.name +", "+officeModel.location.name}}
 		</div>
@@ -10,7 +10,7 @@
 					<b-aspect
 						aspect="16:9"
 						class="bg-secondary img-cover"
-						v-bind:style="{ backgroundImage: 'url(' + image + ')' }"
+						:style="{ backgroundImage: 'url(' + $store.state.serverPath + '/file/'+ image + ')' }"
 					></b-aspect>
 				</template>
 			</b-carousel-slide>
