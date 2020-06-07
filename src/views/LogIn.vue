@@ -1,5 +1,6 @@
 <template>
-    <div id="LogIn">
+<b-container class="bg-light" style="padding-top:6rem; min-height:100vh">
+  <div id="LogIn">
         <h2>Iniciar sesión</h2>
         
 
@@ -52,6 +53,8 @@
         </form>
         </b-modal>
     </div>
+</b-container>
+    
 </template>
 
 <script>
