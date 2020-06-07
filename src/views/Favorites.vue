@@ -25,15 +25,9 @@
 </template>
 
 <script>
-import axios from "axios";
-import LoginError from "../components/LoginError";
-//import OfficeCard from '../components/OfficeCard'
+import axios from 'axios';
+
 export default {
-	name: "Favorites",
-	components: {
-		LoginError
-		//OfficeCard
-	},
 	data() {
 		return {
 			user: null,
@@ -47,14 +41,14 @@ export default {
 		this.user = this.$store.state.user;
 		this.loaded = false;
 		if (this.user.admin) if (this.user.admin == true) this.user = null;
-		if (this.user != null)
+		if (this.user)
+			this.offices = [];
 			axios
 				.post(this.$store.state.serverPath + "/api/office/favorites", {
 					offices: this.user.favorites
 				})
 				.then(res => {
 					if (res.status == 200) this.offices = res.data;
-					//console.log(res.data);
 					this.clearOffices();
 					this.loaded = true;
 				})
@@ -87,6 +81,7 @@ export default {
 	},
 	methods: {
 		goOffice(office) {
+			office;
 			this.$router.push("/office/" + office._id);
 		},
 		clearOffices() {
@@ -108,8 +103,5 @@ export default {
 				});
 		}
 	}
-};
+}
 </script>
-
-<style>
-</style>
