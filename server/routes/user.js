@@ -4,12 +4,13 @@ const bcrypt = require('bcrypt');
 const fs = require('fs');
 const user = require('../models/User');
 const admin = require('../models/Admin');
+const office = require('../models/Office');
 const router = express.Router();
 
 process.env.SECRET_KEY = 'Joaquín c la come';
 
 router.get('/', (req, res) => {
-    user.find({}, (err, data) => {
+    user.find({}).populate({path:'location', populate:{path:'state'}}).exec((err, data) => {
         if(err)
             res.status(400).json(err);
         else
@@ -220,6 +221,28 @@ router.post('/logIn', (req, res) => {
         }
     }).catch(err => {
             res.json({error:'Incorrect password', log:err});
+    });
+});
+
+router.delete('/:id', (req, res) => {
+    office.updateMany({'rents.lessee':req.params.id},{$pull:{rents:{'lessee':[req.params.id]}}}, (err, data) => {
+        if(err){
+            res.status(400).json(err);
+        }
+        else{
+            office.deleteMany({owner:req.params.id}, (err, data) => {
+                if(err)
+                    res.status(400).json(err);
+                else{
+                    user.deleteMany({_id:req.params.id}, (err, data) => {
+                        if(err)
+                            res.status(400).json(err);
+                        else
+                            res.json(data);
+                    });
+                }
+            });
+        }
     });
 });
 

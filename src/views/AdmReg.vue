@@ -145,7 +145,9 @@ export default {
     },
     mounted(){
         if(this.$store.state.user != null)
-            this.$router.push('/');
+            if(this.$store.state.user.admin == true)
+                return;
+        this.$router.push('/');
     },
     methods:{
         checkFormValidity() {
