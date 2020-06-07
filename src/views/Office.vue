@@ -19,16 +19,41 @@
         <p><i>Fecha de registro: </i>{{office.date}}</p>
         <h3>Precio de renta</h3>
         <p><i>Precio: </i>{{office.rentAmount}}</p>
-        <b-button variant="danger" @click="rent">Rentar</b-button>
+        <b-button variant="danger" @click="rentRequestShow">Rentar</b-button>
         <h3>Marcar como favorito</h3>
         <b-button variant="warning" @click="addFavorite" v-if="!favoriteToggle">Añadir a favoritos</b-button>
         <b-button variant="warning" @click="quitFavorite" v-if="favoriteToggle">Quitar de favoritos</b-button>
 
         <!-- Dueño y admin -->
-        <div id="edit" v-if="edit">
+        <div id="edit" v-if="editToggle">
             <h3>Eliminar</h3>
             <b-button variant="dark" @click="remove">Eliminar</b-button>
+            <h2>Solicitudes</h2>
+            <b-card-group>
+                <b-card v-for="(rent, i) in office.rents" v-bind:key="i">
+                    <p><i>Nombre: </i> {{rent.lessee.name}}</p>
+                    <p><i>Apellido: </i> {{rent.lessee.lastName}}</p>
+                    <p><i>Correo: </i>{{rent.lessee.email}}</p>
+                    <p><i>Fecha de solicitud: </i>{{getTime(rent.requestDate)}}</p>
+                    <p><i>Fecha de alojamiento: </i> {{getTime(rent.startDate)}}</p>
+                    <p><i>Fecha de desalojamiento: </i> {{getTime(rent.endDate)}}</p>
+                    <div class="requestAccept" v-if="acceptRequest">
+                        <b-button variant="success" @click="sendAcceptRequest(rent.lessee)">Aceptar solicitud</b-button>
+                        <b-button>Eliminar solicitud</b-button>
+                    </div>
+                    <div class="requestEnd" v-if="rent.startDate != null && rent.endDate == null">
+                        <b-button variant="danger">Cerrar solicitud</b-button>
+                    </div>
+                </b-card>
+            </b-card-group>
         </div>
+
+        <b-card id="requestRent" v-if="rentToggle">
+            <h2>Está a punto de rentar una oficina.</h2>
+            <p><strong>Aquí van las consideraciones antes de rentar la oficina</strong></p>
+            <b-button variant="primary" @click="requestRent">Rentar</b-button>
+            <b-button @click="rentToggle = false">Cancelar</b-button>
+        </b-card>
     </div>
 </template>
 
@@ -49,8 +74,10 @@ export default {
                 date:null,
                 keywords:[]
             },
-            edit:false,
-            favoriteToggle:false
+            editToggle:false,
+            favoriteToggle:false,
+            rentToggle:false,
+            acceptRequest:false
         }
     },
     mounted(){
@@ -61,8 +88,9 @@ export default {
                 this.office = res.data;
                 this.office.date = new Date(this.office.date).toLocaleDateString('es-MX', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
                 if(this.office.owner == this.$store.state.user._id || this.$store.state.admin)
-                    this.edit = true;
+                    this.editToggle = true;
                 this.favoriteToggle = this.searchFavorite();
+                this.acceptRequest = this.getAcceptRequest();
             }
         }).catch(err => {
             console.log(err);
@@ -70,12 +98,26 @@ export default {
         });
     },
     methods:{
-        rent(){
+        rentRequestShow(){
             if(this.$store.state.user == null){
                 alert('Debe iniciar sesión para poder rentar la oficina'); //Falta ponerlo más bonito
             } else {
-                alert('Aquí debería haber una renta');
+                this.rentToggle = true;
             }
+        },
+        requestRent(){
+            axios.post(this.$store.state.serverPath + '/api/office/request/add', {user:this.$store.state.user._id, office:this.$route.params.officeId}).then(res => {
+                if(res.status == 200){
+                    if(res.data.error){
+                        alert('Ya hay una solicitud suya'); //Falta ponerlo más bonito
+                    } else {
+                        alert('Se ha registrado correctamente'); //Falta ponerlo más bonito
+                        this.rentToggle = false;
+                    }
+                }
+            }).catch(err => {
+                console.log(err);
+            });
         },
         searchFavorite(){
             var band = false;
@@ -141,6 +183,27 @@ export default {
                 localStorage.clear();
             }
             this.user = this.$store.state.user;
+        },
+        getTime(value){
+            if(value)
+                return new Date(value).toLocaleDateString('es-MX', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            else
+                return 'Aún no asignada';
+        },
+        getAcceptRequest(){
+            var band = true;
+            for(var rent of this.office.rents){
+                if(rent.starDate != null && rent.endDate == null)
+                    band = false;
+            }
+            return band;
+        },
+        sendAcceptRequest(user){
+            axios.post(this.$store.state.serverPath + '/api/office/request/accept', {user:user._id,date:user.requestDate, office:this.$route.params.officeId}).then(res => {
+                console.log(res);
+            }).catch(err => {
+                console.log(err);
+            });
         }
     }
 }

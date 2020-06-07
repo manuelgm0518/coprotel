@@ -16,7 +16,10 @@ var office = new Schema({
     date:{type:Date, default:Date.now},
     rents:[{
         lessee:{type:mongoose.Schema.Types.ObjectId, ref:user, required:[true, 'No office rents lesse']},
-        date:{type:Date, default:Date.now}
+        requestDate:{type:Date, default:Date.now},
+        startDate:{type:Date, default:null},
+        endDate:{type:Date, default:null},
+        code:{type:String, default:''},
     }],
     keywords:[{type:String, required:[true, 'No office keyword']}]
 });
