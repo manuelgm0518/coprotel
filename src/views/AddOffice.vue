@@ -432,7 +432,7 @@ export default {
                         for(var img of this.office.images.value){
                             var formData = new FormData();
                             formData.append('image', img);
-                            res = await axios.post(this.$store.state.serverPath + '/api/office/image/' + res.data._id, formData, { headers: {'Content-Type': 'multipart/form-data'}})
+                            await axios.post(this.$store.state.serverPath + '/api/office/image/' + res.data._id, formData, { headers: {'Content-Type': 'multipart/form-data'}})
                         }
                         //this.showOverlay = false;
                         this.$router.push('/profile');
