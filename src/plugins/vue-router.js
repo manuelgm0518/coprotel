@@ -47,6 +47,10 @@ export default new VueRouter({
       path: '/office/:officeId?',
       name: 'Office',
       component: () => import('../views/Office.vue')
+    },{
+      path: '/users',
+      name: 'Users',
+      component: () => import('../views/Users.vue')
     }
   ]
 })
