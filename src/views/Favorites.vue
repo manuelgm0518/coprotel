@@ -1,6 +1,6 @@
 <template>
 <b-container class="vh-100">
-      <div v-if="!user" style="height:80vh">
+      <div v-if="!$store.state.user" style="height:80vh">
       <LoginError message="Inicia sesión para ver tus oficinas favoritas." class="vertical-middle" />
     </div>
     <div v-else>

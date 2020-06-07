@@ -1,38 +1,10 @@
 <template>
-<div >
-     
-    <!--<div>
-      <b-card style="max-width: 60rem;" class=".card mt-4" deck>
-        <div class="mt-4">
-          <h1>Mi perfil</h1>
-          <b-card img-src="https://placekitten.com/300/300" img-alt="Card image" img-left class="mb-3">
-            <b-card-text>
-              Some quick example text to build on the card and make up the bulk of the card's content.
-            </b-card-text>
-          </b-card>
-        </div>
-      </b-card>
-    </div>-->
-
-  <b-container fluid class="bg-light vh-10" style="padding-top:4rem">
-    <NavigationBar/>
-    <div class="vertical-middle text-center">
-    <br><br>
+<b-container class="vh-100">
+      <div v-if="!$store.state.user" style="height:80vh">
+      <LoginError message="Inicia sesión para poder revisar tu perfil." class="vertical-middle" />
     </div>
-  </b-container>
-  <div  v-if="!user">
-    <b-container>
-      <br><br>
-    <h4>Inicia sesión para ver tu perfil</h4>
-    <b-button variant="success" @click="goLogin()">Inicia sesión</b-button>
-    <br><br>
-    <h4>¿Aún no tienes cuenta? ¡Regístrate aquí!</h4>
-    <b-button variant="success" @click="goRegister()">Regístrate</b-button>
-    </b-container>
-  </div>
-  <div v-else>
-  <b-container>
-    <div class="vertical-left text center">
+    <div v-else>
+      <div class="vertical-left text center">
       <br>
       <h2>Mi perfil</h2>
       <br>
@@ -84,19 +56,20 @@
       </div>
     </div>
     </div>
+    </div>
   </b-container>
-  </div>
-  </div>
+
+
 </template>
 
 <script>
-import NavigationBar from '../components/NavigationBar'
+import LoginError from '../components/LoginError'
 import axios from 'axios';
 
 export default {
   name: 'Profile',
   components: {
-    NavigationBar
+    LoginError
   },
   data(){
     return{
