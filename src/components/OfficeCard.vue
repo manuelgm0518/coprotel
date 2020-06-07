@@ -8,7 +8,7 @@
 							<b-aspect
 								aspect="16:9"
 								class="bg-secondary img-cover"
-								v-bind:style="{ backgroundImage: 'url(' + image + ')' }"
+								v-bind:style="{ backgroundImage: 'url(' + $store.state.serverPath + '/file/'+ image + ')' }"
 							></b-aspect>
 						</template>
 					</b-carousel-slide>

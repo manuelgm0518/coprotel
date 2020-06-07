@@ -39,7 +39,7 @@
 								<option v-for="(state,i) in statesList" :key="i" :value="state._id">{{ state.name }}</option>
 							</b-form-select>
 
-							<b-form-select v-model="filters.municipality" :disabled="filters.state==''" size="sm">
+							<b-form-select v-model="filters.municipality" :disabled="!filters.state" size="sm">
 								<option
 									v-for="(municipality,j) in municipalitiesList"
 									:key="j"
@@ -126,9 +126,9 @@ export default {
 			})
 			.catch(err => {
 				console.log(err);
-      });
-      this.filters = this.$store.state.filters;
-      
+			});
+		this.filters = this.$store.state.filters;
+
 		this.loaded = false;
 		axios
 			.get(this.$store.state.serverPath + "/api/office/")
@@ -139,11 +139,10 @@ export default {
 			.catch(err => {
 				console.log(err);
 			});
-  },
-  updated() {
-    if(this.filters.municipality)
-        this.updateMunicipalities();
-  },
+	},
+	updated() {
+		if (this.filters.municipality) this.updateMunicipalities();
+	},
 	methods: {
 		cleanFilter: function() {
 			this.filters.searchText = "";
