@@ -32,16 +32,15 @@
       <b-button variant="danger" @click="logOut">Cerrar sesión</b-button>
       <h2>Mis oficinas</h2>
       <b-button variant="warning" @click="$router.push('/addoffice')">Agregar una oficina</b-button>
+       <div v-if="offices">
       <b-card v-for="(office, i) in offices" v-bind:key="i">
         <h3>{{office.name}}</h3>
         <img :src="$store.state.serverPath + '/file/' + offices[i].images[0]">
         <b-button variant="success" @click="goOffice(office)">Ver más</b-button>
-        
-        <!-- <b-link src='/office/' + offices[i]._id>
-        <h3>{{offices[i].name}}</h3>
-         
-        </b-link> -->
-      </b-card>
+         </b-card>
+        </div> <div v-else>
+          <h4>No hay oficinas disponibles para mostrar</h4>
+        </div>
       </div>
     </div>
   </b-container>
