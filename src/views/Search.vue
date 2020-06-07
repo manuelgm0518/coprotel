@@ -129,15 +129,16 @@ export default {
 		},
 		searchQuery: function() {
 			this.loaded = false;
-			axios
-				.get(this.$store.state.serverPath + "/api/office/") //Query mamalón
-				.then(res => {
+			axios.post(this.$store.state.serverPath + "/api/office/search", this.filters)
+			.then(res => {
+				if(res.status == 200){
 					this.offices = res.data;
 					this.loaded = true;
-				})
-				.catch(err => {
-					console.log(err);
-				});
+				}
+			})
+			.catch(err => {
+				console.log(err);
+			})
 		}
 	}
 };

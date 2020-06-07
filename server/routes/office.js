@@ -21,6 +21,26 @@ router.get('/', (req, res) => {
     });
 });
 
+router.post('/search', (req, res) => {
+    if(!req.body.searchText)
+        req.body.searchText = '#';
+    office.find({
+        '$or':[
+            {name:{'$regex':req.body.searchText, '$options':'i'}},
+            {keywords:{'$in':req.body.searchText}},
+            {rentAmount:{'$gte':req.body.minPrice, '$lte':req.body.maxPrice}},
+            {date:{'$gte':req.body.afterDate}}
+        ]
+    }).populate({path:'location', populate:{path:'state'}}).exec((err, data) => {
+        if(err){
+            console.log(err);
+            res.status(400).json(err);
+        }
+        else
+            res.json(data);
+    })
+});
+
 router.post('/favorites', async (req, res) => {
     var send = [], err, data;
     for(var ofi of req.body.offices){
