@@ -24,7 +24,7 @@ export default new VueRouter({
       name:'AdmReg',
       component: () => import('../views/AdmReg.vue')
     },{
-      path: '/search',
+      path: '/search/:filters?',
       name: 'Search',
       component: () => import('../views/Search.vue')
     },{

@@ -1,13 +1,17 @@
 <template>
 	<div>
 		<b-container fluid class="bg-white fixed-top px-lg-5 shadow-sm">
-			<b-row style="height:4rem">
+
+			<b-row>
+
 				<b-col class="d-none d-lg-block">
-					<b-link class="text-primary logo" to="/">Coprotel</b-link>
+					<b-link class="text-primary logo" :to="{name:'Home'}">Coprotel</b-link>
 				</b-col>
+
 				<b-col cols="12" md="8" lg="6" class="px-lg-5">
 					<SearchBar />
 				</b-col>
+
 				<b-col class="text-right d-none d-md-block text-lg-right text-center">
 					<b-link
 						v-for="nav in navigation"
@@ -19,6 +23,7 @@
 						class="material-icons-round nav-icon vertical-middle mx-1">
           {{ nav.icon }}</b-link>
 				</b-col>
+        
 			</b-row>
 		</b-container>
 
