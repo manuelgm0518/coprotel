@@ -1,5 +1,15 @@
 <template>
-  <div>
+  <div  v-if="!user">
+    <b-container fluid class="bg-light vh-10" style="padding-top:4rem">
+      <br><br>
+    <h4>Inicia sesión para ver tu perfil</h4>
+    <b-button variant="success" @click="goLogin()">Inicia sesión</b-button>
+    <br><br>
+    <h4>¿Aún no tienes cuenta? ¡Regístrate aquí!</h4>
+    <b-button variant="success" @click="goRegister()">Regístrate</b-button>
+    </b-container>
+  </div>
+  <div v-else>
   <b-container fluid class="bg-light vh-10" style="padding-top:4rem">
     <NavigationBar/>
     <div class="vertical-middle text-center">
@@ -110,6 +120,12 @@ export default {
       },
       goOffice(office){
         this.$router.push('/office/' + office._id);
+      },
+      goLogin(){
+        this.$router.push('/login/');
+      },
+      goRegister(){
+        this.$router.push('/Register/');
       },
       logOut(){
         localStorage.clear();
