@@ -6,7 +6,7 @@
 		<div v-else>
 			
 			<b-overlay :show="!loaded" no-wrap class="mt-5 mt-md-0" />
-			<b-card style="max-width: 60rem;" class=".card mt-4" deck>
+			<b-card class="mt-5" deck>
 				<div class="mt-4">
 					<h1>Mi perfil</h1>
 					<b-card img-src="https://placekitten.com/300/300" img-left class="mb-3">
@@ -40,38 +40,24 @@
 				</div>
 			</b-card>
 			<div v-if="user.location">
-				<b-card style="max-width: 60rem;" class=".card mt-4" deck>
-					<div class="mt-4">
+				<b-card >
+					
 						<h2>Mis oficinas</h2>
-						<div v-if="offices">
+						
 							<b-card v-for="(office, i) in offices" v-bind:key="i">
 								<h3>{{office.name}}</h3>
 								<!--<img :src="$store.state.serverPath + '/file/' + offices[i].images[0]">-->
 								<b-button variant="success" @click="goOffice(office)">Ver más</b-button>
 							</b-card>
+						
+						<div v-if="offices.length==0">
+							<h5 class="text-muted">Aún no has registrado ninguna oficina</h5>
 						</div>
-						<div v-else>
-							<h4>No hay oficinas disponibles para mostrar</h4>
-						</div>
-					</div>
+					
 				</b-card>
 			</div>
 			<div>
-				<b-card style="max-width: 60rem;" class=".card mt-4" deck>
-					<div class="mt-4">
-						<h2>Mis rentas</h2>
-						<div v-if="rents">
-							<b-card v-for="(rent, i) in rents" v-bind:key="i">
-								<h3>{{rent.name}}</h3>
-								<img :src="$store.state.serverPath + '/file/' + rents[i].images[0]" />
-								<b-button variant="success" @click="goOffice(rent)">Ver más</b-button>
-							</b-card>
-						</div>
-						<div v-else>
-							<h4>No estás rentando ninguna oficina actualmente</h4>
-						</div>
-					</div>
-				</b-card>
+				
 			</div>
 		</div>
 	</b-container>
